@@ -1,0 +1,15 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /HEMS/portal
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ems?useUnicode=true&characterEncoding=UTF-8&&useSSL=false
+    username: root
+    password: 15858066139689XZ
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.tinyplan.exam.entity.po

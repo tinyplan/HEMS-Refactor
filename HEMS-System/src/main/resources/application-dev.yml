@@ -1,0 +1,28 @@
+server:
+  port: 8090
+  servlet:
+    context-path: /HEMS/system
+
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ems?useUnicode=true&characterEncoding=UTF-8&&useSSL=false
+    username: root
+    password: 15858066139689XZ
+    # 连接池具体配置
+    hikari:
+      connection-timeout: 3000
+      maximum-pool-size: 15
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    password: 189050934
+    lettuce:
+      pool:
+        max-wait: 1000
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.tinyplan.exam.entity.po

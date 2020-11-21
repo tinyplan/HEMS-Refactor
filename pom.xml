@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.tinyplan</groupId>
+    <artifactId>exam</artifactId>
+    <version>${hems.version}</version>
+    <name>HEMS</name>
+    <packaging>pom</packaging>
+
+    <!-- 声明子模块 -->
+    <modules>
+        <module>HEMS-Portal</module>
+        <module>HEMS-System</module>
+        <module>HEMS-Service</module>
+        <module>HEMS-Dao</module>
+        <module>HEMS-Entity</module>
+        <module>HEMS-Common</module>
+    </modules>
+
+    <!-- 配置 -->
+    <properties>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- 包版本 -->
+        <hems.version>0.0.1-SNAPSHOT</hems.version>
+        <spring.starter.version>2.4.0</spring.starter.version>
+        <mysql.driver.version>8.0.12</mysql.driver.version>
+    </properties>
+
+    <!-- 这里的配置不会继承 -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- web -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring.starter.version}</version>
+            </dependency>
+            <!-- redis -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${spring.starter.version}</version>
+            </dependency>
+            <!-- 模块版本管理 -->
+            <dependency>
+                <groupId>com.tinyplan.exam</groupId>
+                <artifactId>service</artifactId>
+                <version>${hems.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tinyplan.exam</groupId>
+                <artifactId>dao</artifactId>
+                <version>${hems.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tinyplan.exam</groupId>
+                <artifactId>entity</artifactId>
+                <version>${hems.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tinyplan.exam</groupId>
+                <artifactId>common</artifactId>
+                <version>${hems.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <!-- 设置编译版本为1.8 -->
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

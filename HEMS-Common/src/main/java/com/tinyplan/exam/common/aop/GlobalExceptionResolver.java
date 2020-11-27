@@ -26,7 +26,6 @@ public class GlobalExceptionResolver {
         return new ApiResult<>(ResultStatus.RES_UNKNOWN_ERROR,null);
     }
 
-    // TODO 处理业务异常
     @ExceptionHandler(BusinessException.class)
     @ResponseBody
     public ApiResult<Object> handleException(BusinessException e){

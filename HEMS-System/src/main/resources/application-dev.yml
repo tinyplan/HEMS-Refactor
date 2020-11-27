@@ -7,7 +7,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ems?useUnicode=true&characterEncoding=UTF-8&&useSSL=false
+    url: jdbc:mysql://localhost:3306/ems_1?useUnicode=true&characterEncoding=UTF-8&&useSSL=false
     username: root
     password: 15858066139689XZ
     # 连接池具体配置

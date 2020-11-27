@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tinyplan.exam.dao.CandidateMapper">
+    <!-- 考生基础信息表 -->
+    <sql id="rawCandidateColumn">
+        candidate_id, account_name, password, role_id
+    </sql>
+    <sql id="candidateColumn">
+        candidate_id AS id, account_name AS accountName, password, role_id as roleId
+    </sql>
+    <!-- 考生详细信息表 -->
+    <sql id="rawCandidateDetailColumn">
+        candidate_id, real_name, gender, contact, email, edu_back, home_address
+    </sql>
+    <sql id="candidateDetailColumn">
+        candidate_id AS id, real_name AS realName, gender, contact, email, edu_back AS eduBack, home_address AS homeAddress
+    </sql>
+
+    <select id="getMaxId" resultType="java.lang.Integer">
+        SELECT max(id)
+        FROM candidate
+    </select>
+
+    <insert id="insertCandidate">
+        INSERT INTO candidate (<include refid="rawCandidateColumn"/>)
+        VALUES (#{id}, #{accountName}, #{password}, #{roleId})
+    </insert>
+
+    <select id="getCandidateByUsername" resultType="com.tinyplan.exam.entity.po.User">
+        SELECT <include refid="candidateColumn"/>
+        FROM candidate
+        WHERE candidate_id = #{username} OR account_name = #{username}
+    </select>
+
+    <insert id="insertCandidateDetail">
+        INSERT INTO candidate_detail (<include refid="rawCandidateDetailColumn"/>)
+        VALUES (#{id}, #{realName}, #{gender}, #{contact}, #{email}, #{eduBack}, #{homeAddress})
+    </insert>
+
+    <select id="getCandidateDetail" resultType="com.tinyplan.exam.entity.po.CandidateDetail">
+        SELECT <include refid="candidateDetailColumn"/>
+        FROM candidate_detail
+        WHERE candidate_id = #{userId}
+    </select>
+
+</mapper>

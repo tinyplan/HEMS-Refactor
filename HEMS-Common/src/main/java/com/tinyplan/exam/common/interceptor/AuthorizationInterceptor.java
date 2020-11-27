@@ -1,8 +1,9 @@
 package com.tinyplan.exam.common.interceptor;
 
 import com.tinyplan.exam.common.annotation.Authorization;
-import com.tinyplan.exam.common.manager.TokenManager;
-import com.tinyplan.exam.common.utils.TokenUtil;
+import com.tinyplan.exam.common.service.TokenService;
+import com.tinyplan.exam.common.service.impl.TokenServiceImpl;
+import com.tinyplan.exam.common.utils.RequestUtil;
 import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
 import org.springframework.web.method.HandlerMethod;
@@ -17,10 +18,10 @@ import java.lang.reflect.Method;
  */
 public class AuthorizationInterceptor implements HandlerInterceptor {
 
-    private TokenManager tokenManager;
+    private final TokenService tokenService;
 
-    public AuthorizationInterceptor(TokenManager tokenManager) {
-        this.tokenManager = tokenManager;
+    public AuthorizationInterceptor(TokenService tokenService) {
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -31,13 +32,13 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
             Method method = handlerMethod.getMethod();
             // 检测方法是否被@Authorization注解
             if (method.getAnnotation(Authorization.class) != null) {
-                String token = TokenUtil.getToken(request);
-                if (token == null || !tokenManager.checkToken(token)) {
+                String token = RequestUtil.getToken(request);
+                if (token == null || !tokenService.checkToken(token)) {
                     // 未通过验证
                     throw new BusinessException(ResultStatus.RES_ILLEGAL_REQUEST);
                 } else {
                     // 刷新时间
-                    tokenManager.flushExpire(token);
+                    tokenService.flushExpire(token);
                 }
             }
         }

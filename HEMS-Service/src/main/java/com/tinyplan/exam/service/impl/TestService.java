@@ -1,4 +1,4 @@
-package com.tinyplan.exam.service;
+package com.tinyplan.exam.service.impl;
 
 import com.tinyplan.exam.dao.TestMapper;
 import org.springframework.data.redis.core.StringRedisTemplate;

@@ -16,6 +16,9 @@ import java.util.Map;
 
 public class JWTUtil {
 
+    public static final String CLAIM_KEY_USER_ID = "userId";
+    public static final String CLAIM_KEY_ROLE_ID = "roleId";
+
     /**
      * 签名
      *
@@ -53,7 +56,7 @@ public class JWTUtil {
      */
     public static Map<String, Claim> verify(String token) throws UnsupportedEncodingException {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(EncryptUtil.SECRET_KEY)).build();
-        DecodedJWT jwt = verifier.verify(token);
+        DecodedJWT jwt = verifier.verify(EncryptUtil.decryptByAES(token));
         return jwt.getClaims();
     }
 

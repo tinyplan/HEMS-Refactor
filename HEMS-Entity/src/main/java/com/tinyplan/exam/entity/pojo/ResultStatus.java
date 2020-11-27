@@ -8,17 +8,18 @@ public enum ResultStatus {
     // 登录
     RES_LOGIN_UNKNOWN_USER(20001, "用户不存在"),
     RES_LOGIN_WRONG_PASS(20002, "密码错误"),
-    RES_LOGIN_SUCCESS(20003, "登录成功"),
     // 获取用户信息
     RES_INFO_NOT_EXIST(20006, "用户信息不存在"),
     // 注册
-    RES_EXIST_SAME_USER(20010, "存在重复用户"),
+    RES_REGISTER_EXISTED_USER(20010, "存在重复用户"),
+    RES_REGISTER_FAIL(20011, "注册失败"),
+
 
     RES_ILLEGAL_REQUEST(40003, "非法请求"),
     RES_UNKNOWN_ERROR(50000, "未知异常");
 
-    private int code;
-    private String message;
+    private final int code;
+    private final String message;
 
     ResultStatus(int code, String message) {
         this.code = code;

@@ -40,6 +40,12 @@
     <!-- 这里的配置不会继承 -->
     <dependencyManagement>
         <dependencies>
+            <!-- aop -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
+                <version>${spring.starter.version}</version>
+            </dependency>
             <!-- web -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -82,6 +88,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+            <version>4.12</version>
         </dependency>
     </dependencies>
 

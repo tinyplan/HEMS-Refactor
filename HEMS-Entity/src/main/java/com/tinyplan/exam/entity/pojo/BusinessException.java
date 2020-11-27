@@ -5,15 +5,15 @@ package com.tinyplan.exam.entity.pojo;
  */
 public class BusinessException extends RuntimeException{
 
-    private int code;
+    private final int code;
     /**
      * 不使用message变量名
      *
      * 若使用，则生成的getter方法名为getMessage(),
      * 而父类中同名方法返回的是detailMessage, 有歧义
      */
-    private String msg;
-    private ResultStatus status;
+    private final String msg;
+    private final ResultStatus status;
 
     public BusinessException(){
         // 默认为未知错误

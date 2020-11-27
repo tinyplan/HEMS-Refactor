@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tinyplan.exam.dao.AdminMapper">
+
+    <sql id="adminColumn">
+        admin_id AS id, account_name AS accountName, password, avatar, role_id as roleId
+    </sql>
+
+    <select id="getAdminByUsername" resultType="com.tinyplan.exam.entity.po.User">
+        SELECT <include refid="adminColumn"/>
+        FROM admin
+        WHERE admin_id = #{username} OR account_name = #{username}
+    </select>
+</mapper>

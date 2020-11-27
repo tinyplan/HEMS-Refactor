@@ -6,9 +6,9 @@ package com.tinyplan.exam.entity.pojo;
  * @param <T> 数据体类型
  */
 public class ApiResult<T> {
-    private int code;
+    private final int code;
     private String message;
-    private T data;
+    private final T data;
 
     private ApiResult(int code, String message, T data) {
         this.code = code;
@@ -22,6 +22,7 @@ public class ApiResult<T> {
 
     /**
      * 覆盖原始信息
+     *
      * @param resultStatus 消息状态
      * @param message 自定义消息
      * @param data 返回信息
@@ -32,6 +33,10 @@ public class ApiResult<T> {
 
     public int getCode() {
         return code;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public void setMessage(String message) {

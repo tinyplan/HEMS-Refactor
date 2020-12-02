@@ -14,6 +14,12 @@ public class HEMSProperties {
     private long tokenExpire;
     @Value("${hems.token.encrypt:false}")
     private boolean encrypt;
+    @Value("${hems.debug:false}")
+    private boolean debug;
+    @Value("${hems.news.tmp}")
+    private String newsTmpDir;
+    @Value("${hems.default.news.cover}")
+    private String newsCoverImg;
 
     public boolean isCors() {
         return cors;
@@ -25,5 +31,17 @@ public class HEMSProperties {
 
     public boolean isEncrypt() {
         return encrypt;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public String getNewsTmpDir() {
+        return newsTmpDir;
+    }
+
+    public String getNewsCoverImg() {
+        return newsCoverImg;
     }
 }

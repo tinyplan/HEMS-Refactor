@@ -22,14 +22,16 @@ public class GlobalExceptionResolver {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public ApiResult<Object> handleException(Exception e){
-        LOGGER.error(e.getMessage(), e);
+        LOGGER.error(e.getMessage());
+        e.printStackTrace();
         return new ApiResult<>(ResultStatus.RES_UNKNOWN_ERROR,null);
     }
 
     @ExceptionHandler(BusinessException.class)
     @ResponseBody
     public ApiResult<Object> handleException(BusinessException e){
-        // LOGGER.error(e.getMessage(), e);
+        LOGGER.error(e.getMessage());
+        e.printStackTrace();
         return new ApiResult<>(e.getStatus(),null);
     }
 

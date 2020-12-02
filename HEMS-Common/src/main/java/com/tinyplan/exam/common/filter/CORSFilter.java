@@ -46,7 +46,7 @@ public class CORSFilter implements Filter {
                         + ", " + httpServletRequest.getMethod());
             }
             httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-            httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
+            httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, PATCH, OPTIONS");
             httpServletResponse.setHeader("Access-Control-Max-Age", "0");
             httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpServletResponse.setHeader("XDomainRequestAllowed", "1");

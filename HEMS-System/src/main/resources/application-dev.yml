@@ -22,6 +22,10 @@ spring:
     lettuce:
       pool:
         max-wait: 1000
+  servlet:
+    multipart:
+      max-request-size: 15MB
+      max-file-size: 10MB
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

@@ -13,7 +13,15 @@ public enum ResultStatus {
     // 注册
     RES_REGISTER_EXISTED_USER(20010, "存在重复用户"),
     RES_REGISTER_FAIL(20011, "注册失败"),
-
+    // 文件上传
+    RES_FILE_UPLOAD_FAILED(20020, "文件上传失败"),
+    RES_FILE_DELETE_NOT_EXIST(20021, "文件不存在"),
+    RES_FILE_DELETE_FAILED(20022, "文件删除失败"),
+    // 发布新闻
+    RES_NEWS_PUBLISH_FAILED(20025, "发布新闻失败"),
+    // 删除新闻
+    RES_NEWS_DELETE_FAILED(20025, "删除新闻失败"),
+    RES_NEWS_UPDATE_FAILED(20026, "更新新闻失败"),
 
     RES_ILLEGAL_REQUEST(40003, "非法请求"),
     RES_UNKNOWN_ERROR(50000, "未知异常");

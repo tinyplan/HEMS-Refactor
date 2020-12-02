@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tinyplan.exam.dao.NewsMapper">
+
+    <sql id="rawNewsColumn">
+        news_id, title, publish_date, publisher, cover_img, content, content_img, type
+    </sql>
+
+    <sql id="newsColumn">
+        news_id AS newsId, title, publish_date AS publishDate, publisher, cover_img AS coverImg, content, content_img AS contentImg, type
+    </sql>
+
+    <update id="updateNews">
+        UPDATE news SET title = #{title}, content = #{content}, content_img = #{contentImg}
+        WHERE news_id = #{newsId}
+    </update>
+
+    <delete id="deleteNews">
+        DELETE FROM news
+        WHERE news_id = #{newsId}
+    </delete>
+
+    <select id="getMaxId" resultType="java.lang.Integer">
+        SELECT max(id) FROM news
+    </select>
+
+    <insert id="insertNews">
+        INSERT INTO news (<include refid="rawNewsColumn"/>)
+        values (#{newsId}, #{title}, #{publishDate}, #{publisher}, #{coverImg}, #{content}, #{contentImg}, #{type})
+    </insert>
+
+    <select id="getAllNews" resultType="com.tinyplan.exam.entity.po.News">
+        SELECT <include refid="newsColumn"/>
+        FROM news
+    </select>
+
+    <select id="getNews" resultType="com.tinyplan.exam.entity.po.News">
+        SELECT <include refid="newsColumn"/>
+        FROM news
+        WHERE news_id = #{newsId}
+    </select>
+
+</mapper>

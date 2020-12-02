@@ -2,23 +2,13 @@ package com.tinyplan.exam.entity.form;
 
 import java.util.List;
 
-/**
- * 新闻提交 表单
- */
-public class PublishNewsForm {
+public class UpdateNewsForm {
+    private String newsId;
     private String title;
     private String content;
     private List<String> filenameList;
 
-    public PublishNewsForm() {}
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public UpdateNewsForm() {}
 
     public String getContent() {
         return content;
@@ -26,6 +16,22 @@ public class PublishNewsForm {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getNewsId() {
+        return newsId;
+    }
+
+    public void setNewsId(String newsId) {
+        this.newsId = newsId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public List<String> getFilenameList() {

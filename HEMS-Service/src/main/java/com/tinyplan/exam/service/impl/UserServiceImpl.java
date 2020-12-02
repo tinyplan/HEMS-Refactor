@@ -3,10 +3,8 @@ package com.tinyplan.exam.service.impl;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.DigestUtil;
-import com.auth0.jwt.interfaces.Claim;
 import com.tinyplan.exam.common.service.TokenService;
-import com.tinyplan.exam.common.service.impl.TokenServiceImpl;
-import com.tinyplan.exam.common.utils.JWTUtil;
+import com.tinyplan.exam.common.utils.JwtUtil;
 import com.tinyplan.exam.common.utils.PrefixUtil;
 import com.tinyplan.exam.common.utils.RoleUtil;
 import com.tinyplan.exam.dao.AdminMapper;
@@ -15,6 +13,7 @@ import com.tinyplan.exam.dao.RoleMapper;
 import com.tinyplan.exam.entity.po.CandidateDetail;
 import com.tinyplan.exam.entity.po.User;
 import com.tinyplan.exam.entity.pojo.BusinessException;
+import com.tinyplan.exam.entity.pojo.JwtDataLoad;
 import com.tinyplan.exam.entity.pojo.UserType;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
 import com.tinyplan.exam.entity.vo.AdminDetailVO;
@@ -29,7 +28,6 @@ import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
@@ -57,7 +55,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(SecureUtil.md5(user.getPassword()));
         // 生成用户ID
         // 获取考生表中当前最大的ID并 加1
-        String prefix = PrefixUtil.getPrefix(UserType.CANDIDATE);
+        String prefix = PrefixUtil.getUserPrefix(UserType.CANDIDATE);
         String date = LocalDateTimeUtil.format(LocalDateTimeUtil.now(), "yyyyMMdd");
         String maxId = Integer.toString(candidateMapper.getMaxId() + 1);
         String userId = String.join("_", prefix, date, maxId);
@@ -166,11 +164,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public DetailVO getUserInfo(String token) throws UnsupportedEncodingException {
         // 先从token中取出 userId 和 roleId
-        Map<String, Claim> claims = JWTUtil.verify(token);
-        String userId = claims.get(JWTUtil.CLAIM_KEY_USER_ID).asString();
-        String roleId = claims.get(JWTUtil.CLAIM_KEY_ROLE_ID).asString();
+        JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
         // 获取用户类型
-        UserType type = RoleUtil.getUserType(roleId);
+        UserType type = RoleUtil.getUserType(load.getRoleId());
         DetailVO detail = null;
         // 从缓存中查找
         switch (type) {
@@ -192,7 +188,7 @@ public class UserServiceImpl implements UserService {
             return detail;
         }
         // 未命中, 再次查询数据库
-        User user = getUser(userId, type);
+        User user = getUser(load.getUserId(), type);
         if(user == null) {
             throw new BusinessException(ResultStatus.RES_LOGIN_UNKNOWN_USER);
         }

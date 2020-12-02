@@ -3,8 +3,9 @@ package com.tinyplan.exam.common.service.impl;
 import com.tinyplan.exam.common.properties.HEMSProperties;
 import com.tinyplan.exam.common.service.TokenService;
 import com.tinyplan.exam.common.utils.EncryptUtil;
-import com.tinyplan.exam.common.utils.JWTUtil;
+import com.tinyplan.exam.common.utils.JwtUtil;
 import com.tinyplan.exam.common.utils.RedisUtil;
+import com.tinyplan.exam.entity.pojo.JwtDataLoad;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -27,9 +28,9 @@ public class TokenServiceImpl implements TokenService {
      */
     public String generateToken(String userId, String roleId) throws UnsupportedEncodingException {
         Map<String , String> map = new HashMap<>();
-        map.put(JWTUtil.CLAIM_KEY_USER_ID, userId);
-        map.put(JWTUtil.CLAIM_KEY_ROLE_ID, roleId);
-        String token = JWTUtil.sign(map, hemsProperties.getTokenExpire());
+        map.put(JwtDataLoad.CLAIM_KEY_USER_ID, userId);
+        map.put(JwtDataLoad.CLAIM_KEY_ROLE_ID, roleId);
+        String token = JwtUtil.sign(map, hemsProperties.getTokenExpire());
         if (hemsProperties.isEncrypt()) {
             token = EncryptUtil.encryptByAES(token);
         }

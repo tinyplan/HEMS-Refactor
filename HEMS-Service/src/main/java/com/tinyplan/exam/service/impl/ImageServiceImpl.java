@@ -139,6 +139,10 @@ public class ImageServiceImpl implements ImageService {
                 throw new BusinessException(ResultStatus.RES_FILE_UPLOAD_FAILED);
             }
         }
+        // 全部上传成功之后，删除缓存图片
+        for (String localFileName : filenameList) {
+            this.deleteLocal(localPath, localFileName);
+        }
     }
 
     /**

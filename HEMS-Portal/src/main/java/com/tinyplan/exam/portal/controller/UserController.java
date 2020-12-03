@@ -34,10 +34,13 @@ public class UserController {
         user.setAccountName(registerForm.getUsername());
         // 这里先设置为原始密码
         user.setPassword(registerForm.getPassword());
+        // 只有学生可以注册
         user.setRoleId("r1003");
         CandidateDetail detail = new CandidateDetail();
         detail.setContact(registerForm.getTelephone());
         detail.setEmail(registerForm.getEmail());
+        // 设置头像
+        detail.setAvatar("default_admin_avatar.png");
         userService.register(user, detail);
         return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
     }

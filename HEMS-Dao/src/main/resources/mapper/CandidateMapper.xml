@@ -11,10 +11,10 @@
     </sql>
     <!-- 考生详细信息表 -->
     <sql id="rawCandidateDetailColumn">
-        candidate_id, real_name, gender, contact, email, edu_back, home_address
+        candidate_id, real_name, gender, contact, email, edu_back, home_address, avatar
     </sql>
     <sql id="candidateDetailColumn">
-        candidate_id AS id, real_name AS realName, gender, contact, email, edu_back AS eduBack, home_address AS homeAddress
+        candidate_id AS id, real_name AS realName, gender, contact, email, edu_back AS eduBack, home_address AS homeAddress, avatar
     </sql>
 
     <select id="getMaxId" resultType="java.lang.Integer">
@@ -35,7 +35,7 @@
 
     <insert id="insertCandidateDetail">
         INSERT INTO candidate_detail (<include refid="rawCandidateDetailColumn"/>)
-        VALUES (#{id}, #{realName}, #{gender}, #{contact}, #{email}, #{eduBack}, #{homeAddress})
+        VALUES (#{id}, #{realName}, #{gender}, #{contact}, #{email}, #{eduBack}, #{homeAddress}, #{avatar})
     </insert>
 
     <select id="getCandidateDetail" resultType="com.tinyplan.exam.entity.po.CandidateDetail">

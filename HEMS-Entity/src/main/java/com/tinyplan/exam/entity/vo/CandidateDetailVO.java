@@ -16,6 +16,7 @@ public class CandidateDetailVO implements DetailVO {
     private String eduBack;
     private String homeAddress;
     private List<Role> roles;
+    private String avatar;
 
     public CandidateDetailVO(CandidateDetail detail) {
         this.id = detail.getId();
@@ -25,6 +26,7 @@ public class CandidateDetailVO implements DetailVO {
         this.email = detail.getEmail();
         this.eduBack = detail.getEduBack();
         this.homeAddress = detail.getHomeAddress();
+        this.avatar = detail.getAvatar();
     }
 
     public String getId() {
@@ -93,6 +95,14 @@ public class CandidateDetailVO implements DetailVO {
 
     public List<Role> getRoles() {
         return roles;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     @Override

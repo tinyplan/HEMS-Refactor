@@ -8,6 +8,7 @@ public class CandidateDetail {
     private String email;
     private String eduBack;
     private String homeAddress;
+    private String avatar;
 
     public CandidateDetail() {}
 
@@ -65,5 +66,13 @@ public class CandidateDetail {
 
     public void setHomeAddress(String homeAddress) {
         this.homeAddress = homeAddress;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

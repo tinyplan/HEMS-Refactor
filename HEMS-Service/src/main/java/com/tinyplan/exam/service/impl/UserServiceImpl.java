@@ -14,13 +14,13 @@ import com.tinyplan.exam.entity.po.CandidateDetail;
 import com.tinyplan.exam.entity.po.User;
 import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.JwtDataLoad;
-import com.tinyplan.exam.entity.pojo.UserType;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
-import com.tinyplan.exam.entity.vo.AdminDetailVO;
-import com.tinyplan.exam.entity.vo.CandidateDetailVO;
+import com.tinyplan.exam.entity.pojo.UserType;
 import com.tinyplan.exam.entity.vo.DetailVO;
 import com.tinyplan.exam.entity.vo.TokenVO;
+import com.tinyplan.exam.service.UserHandlerService;
 import com.tinyplan.exam.service.UserService;
+import com.tinyplan.exam.service.factory.UserHandlerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,9 +37,6 @@ public class UserServiceImpl implements UserService {
 
     @Resource(name = "roleMapper")
     private RoleMapper roleMapper;
-
-    @Resource(name = "adminMapper")
-    private AdminMapper adminMapper;
 
     @Resource(name = "candidateMapper")
     private CandidateMapper candidateMapper;
@@ -81,7 +78,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public TokenVO login(String username, String password, UserType type) throws UnsupportedEncodingException {
         TokenVO token = null;
-        User user = this.getUser(username, type);
+        UserHandlerService handlerService = UserHandlerFactory.getHandlerService(type);
+        if (handlerService == null) {
+            throw new BusinessException();
+        }
+        User user = handlerService.getUser(username, type);
         // 用户不存在
         if (user == null) {
             throw new BusinessException(ResultStatus.RES_LOGIN_UNKNOWN_USER);
@@ -94,71 +95,14 @@ public class UserServiceImpl implements UserService {
         token = new TokenVO();
         token.setToken(tokenService.generateToken(user.getId(), user.getRoleId()));
         // 准备详细信息
-        DetailVO detail = this.getUserDetail(user, type);
-        // 将用户信息存入redis
-        tokenService.setValue(token.getToken(), detail);
-        return token;
-    }
-
-    /**
-     * 根据用户类型, 获取用户对象
-     *
-     * @param username 用户名(用户ID 或 账户名)
-     * @param type 用户类型
-     * @return 用户基础对象
-     */
-    private User getUser(String username, UserType type) {
-        User user = null;
-        // TODO 更换为对应的查询方法
-        switch (type){
-            case CANDIDATE:
-                user = candidateMapper.getCandidateByUsername(username);
-                break;
-            case INVIGILATOR:
-
-                break;
-            case EDU_ADMIN:
-            case SYSTEM_ADMIN:
-                user = adminMapper.getAdminByUsername(username);
-                break;
-            default:
-                // TODO 这里的状态码有待商榷
-                throw new BusinessException();
-        }
-        return user;
-    }
-
-    /**
-     * 根据用户类型, 获取详细信息
-     *      调用这个方法之前，需要先调用getUser()方法取得user对象, 否则取得的信息可能不全
-     * @param user 用户对象
-     * @param type 用户类型
-     * @return 详细信息
-     */
-    private DetailVO getUserDetail(User user, UserType type){
-        DetailVO detail = null;
-        switch (type) {
-            case CANDIDATE:
-                detail = new CandidateDetailVO(candidateMapper.getCandidateDetail(user.getId()));
-                detail.copyValueFromUser(user);
-                break;
-            case INVIGILATOR:
-
-                break;
-            case SYSTEM_ADMIN:
-            case EDU_ADMIN:
-                detail = new AdminDetailVO();
-                detail.copyValueFromUser(user);
-                break;
-            default:
-                // TODO 这里的状态码有待商榷
-                throw new BusinessException();
-        }
-        // 设置角色详细信息
+        DetailVO detail = handlerService.getUserDetail(user, type);
+        // 获取角色信息
         List<String> roleIdList = new ArrayList<>();
         roleIdList.add(user.getRoleId());
         detail.setRoles(roleMapper.getRolesByIds(roleIdList));
-        return detail;
+        // 将用户信息存入redis
+        tokenService.setValue(token.getToken(), detail);
+        return token;
     }
 
     @Override
@@ -167,32 +111,21 @@ public class UserServiceImpl implements UserService {
         JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
         // 获取用户类型
         UserType type = RoleUtil.getUserType(load.getRoleId());
-        DetailVO detail = null;
-        // 从缓存中查找
-        switch (type) {
-            case CANDIDATE:
-                detail = (CandidateDetailVO) tokenService.getValue(token);
-                break;
-            case INVIGILATOR:
-
-                break;
-            case SYSTEM_ADMIN:
-            case EDU_ADMIN:
-                detail = (AdminDetailVO) tokenService.getValue(token);
-                break;
-            default:
-                throw new BusinessException();
+        UserHandlerService handlerService = UserHandlerFactory.getHandlerService(type);
+        if (handlerService == null) {
+            throw new BusinessException();
         }
+        DetailVO detail = handlerService.convertDetail(tokenService.getValue(token));
         // 命中, 直接返回
         if (detail != null) {
             return detail;
         }
         // 未命中, 再次查询数据库
-        User user = getUser(load.getUserId(), type);
+        User user = handlerService.getUser(load.getUserId(), type);
         if(user == null) {
             throw new BusinessException(ResultStatus.RES_LOGIN_UNKNOWN_USER);
         }
-        detail = this.getUserDetail(user, type);
+        detail = handlerService.getUserDetail(user, type);
         return detail;
     }
 

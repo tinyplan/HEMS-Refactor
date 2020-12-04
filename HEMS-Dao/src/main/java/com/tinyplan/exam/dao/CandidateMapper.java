@@ -48,5 +48,13 @@ public interface CandidateMapper {
      */
     CandidateDetail getCandidateDetail(@Param("userId") String userId);
 
+    /**
+     * 更新密码
+     *
+     * @param userId 用户ID
+     * @param newPassword 新的密码
+     */
+    Integer updatePassword(@Param("userId") String userId, @Param("newPassword") String newPassword);
+
 
 }

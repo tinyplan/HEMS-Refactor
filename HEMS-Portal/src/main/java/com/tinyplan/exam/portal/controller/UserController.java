@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 @RestController("portalUserController")
 @RequestMapping({"/candidate"})
@@ -82,6 +83,24 @@ public class UserController {
         // 将表单中的信息封装成对象
         CandidateDetail detail = dataInjectService.injectCandidateDetail(form);
         userService.updateUserInfo(token, detail);
+        return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param params 参数列表(懒得再建一个接收类了)
+     */
+    @PatchMapping("/password")
+    @Authorization
+    public ApiResult<Object> updatePassword(HttpServletRequest request,
+                                            @RequestBody Map<String, String> params) {
+        String token = RequestUtil.getToken(request);
+        String newPassword = params.get("newPassword");
+        if (newPassword == null || "".equals(newPassword)) {
+            throw  new BusinessException(ResultStatus.RES_UNKNOWN_ERROR, "参数校验异常");
+        }
+        userService.updatePassword(token, newPassword);
         return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
     }
 

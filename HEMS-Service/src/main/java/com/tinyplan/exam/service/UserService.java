@@ -21,6 +21,8 @@ public interface UserService {
     // 考生专用
     void updateUserInfo(String token, CandidateDetail newDetail);
 
+    void updatePassword(String token, String newPassword);
+
     void logout(String token);
 
 }

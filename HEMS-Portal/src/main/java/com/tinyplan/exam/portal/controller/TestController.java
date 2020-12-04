@@ -1,10 +1,10 @@
 package com.tinyplan.exam.portal.controller;
 
 import com.tinyplan.exam.service.impl.TestService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 @RestController
 public class TestController {
@@ -12,9 +12,11 @@ public class TestController {
     @Resource(name = "testService")
     private TestService testService;
 
-    @GetMapping("/test")
-    public String test(){
-        return testService.test();
+    @PatchMapping("/test")
+    public String test(@RequestBody Map<String, String> params){
+        // return testService.test();
+        System.out.println(params.get("password"));
+        return "success";
     }
 
 }

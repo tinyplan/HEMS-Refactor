@@ -33,4 +33,6 @@ public interface UserHandlerService {
      */
     DetailVO convertDetail(Object rawData);
 
+    void updatePassword(String userId, String newPassword);
+
 }

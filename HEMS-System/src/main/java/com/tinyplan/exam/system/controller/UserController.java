@@ -5,9 +5,8 @@ import com.tinyplan.exam.common.utils.RequestUtil;
 import com.tinyplan.exam.entity.form.SystemLoginForm;
 import com.tinyplan.exam.entity.pojo.ApiResult;
 import com.tinyplan.exam.entity.pojo.BusinessException;
-import com.tinyplan.exam.entity.pojo.UserType;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
-import com.tinyplan.exam.entity.vo.AdminDetailVO;
+import com.tinyplan.exam.entity.pojo.UserType;
 import com.tinyplan.exam.entity.vo.DetailVO;
 import com.tinyplan.exam.entity.vo.TokenVO;
 import com.tinyplan.exam.service.UserService;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 
 @RestController("systemUserController")
 @RequestMapping("/user")
@@ -25,15 +23,15 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ApiResult<TokenVO> login(@RequestBody SystemLoginForm loginForm) throws UnsupportedEncodingException {
+    public ApiResult<TokenVO> login(@RequestBody SystemLoginForm loginForm) {
         // TODO 参数校验
-        TokenVO token = userService.login(loginForm.getUsername(), loginForm.getPassword(), UserType.SYSTEM_ADMIN);
+        TokenVO token = userService.login(loginForm.getUsername(), loginForm.getPassword(), UserType.CANDIDATE);
         return new ApiResult<>(ResultStatus.RES_SUCCESS, token);
     }
 
     @GetMapping("/info")
     @Authorization
-    public ApiResult<DetailVO> info(HttpServletRequest request) throws UnsupportedEncodingException {
+    public ApiResult<DetailVO> info(HttpServletRequest request) {
         String token = RequestUtil.getToken(request);
         DetailVO userInfo = userService.getUserInfo(token);
         // 这里再找不到的话, 则用户不存在(不太可能发生这种情况)

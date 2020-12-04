@@ -149,6 +149,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updatePassword(String token, String newPassword) {
+        JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
+        UserHandlerService handlerService = UserHandlerFactory.getHandlerService(RoleUtil.getUserType(load.getRoleId()));
+        handlerService.updatePassword(load.getUserId(), newPassword);
+        // 删除token, 让用户重新登录
+        tokenService.deleteToken(token);
+    }
+
+    @Override
     public void logout(String token) {
         // 删除token的时候, 失败了也没有问题(大概), 登录的时候重新生成一个就好了
         tokenService.deleteToken(token);

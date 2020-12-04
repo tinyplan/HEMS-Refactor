@@ -41,6 +41,11 @@ public class AdminHandlerService implements UserHandlerService, InitializingBean
     }
 
     @Override
+    public void updatePassword(String userId, String newPassword) {
+
+    }
+
+    @Override
     public void afterPropertiesSet() throws Exception {
         UserHandlerFactory.registerHandlerService(UserType.EDU_ADMIN, this);
         UserHandlerFactory.registerHandlerService(UserType.SYSTEM_ADMIN, this);

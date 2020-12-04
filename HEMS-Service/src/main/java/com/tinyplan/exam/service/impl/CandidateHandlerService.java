@@ -1,5 +1,7 @@
 package com.tinyplan.exam.service.impl;
 
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.tinyplan.exam.common.properties.QiniuProperties;
 import com.tinyplan.exam.dao.CandidateMapper;
 import com.tinyplan.exam.entity.po.CandidateDetail;
@@ -39,6 +41,11 @@ public class CandidateHandlerService implements UserHandlerService, Initializing
     @Override
     public DetailVO convertDetail(Object rawData) {
         return (CandidateDetailVO) rawData;
+    }
+
+    @Override
+    public void updatePassword(String userId, String newPassword) {
+        candidateMapper.updatePassword(userId, SecureUtil.md5(newPassword));
     }
 
     @Override

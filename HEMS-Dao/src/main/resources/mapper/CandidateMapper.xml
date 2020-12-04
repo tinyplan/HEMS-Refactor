@@ -42,6 +42,12 @@
         WHERE candidate_id = #{id}
     </update>
 
+    <update id="updatePassword">
+        UPDATE candidate
+        SET password = #{newPassword}
+        where candidate_id = #{userId}
+    </update>
+
     <select id="getMaxId" resultType="java.lang.Integer">
         SELECT max(id)
         FROM candidate

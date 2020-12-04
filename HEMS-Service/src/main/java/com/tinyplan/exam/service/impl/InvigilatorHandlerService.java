@@ -27,6 +27,11 @@ public class InvigilatorHandlerService implements UserHandlerService, Initializi
     }
 
     @Override
+    public void updatePassword(String userId, String newPassword) {
+
+    }
+
+    @Override
     public void afterPropertiesSet() throws Exception {
         UserHandlerFactory.registerHandlerService(UserType.INVIGILATOR, this);
     }

@@ -27,7 +27,7 @@ public class JwtUtil {
      * @param expire 有效时间(分钟)
      * @return JWT字符串
      */
-    public static String sign(Map<String, String> claims, long expire) throws UnsupportedEncodingException {
+    public static String sign(Map<String, String> claims, long expire) {
         Map<String, Object> header = new HashMap<>();
         header.put("alg", "HS256");
         header.put("typ", "JWT");
@@ -44,7 +44,13 @@ public class JwtUtil {
         }
 
         builder.withIssuedAt(signDate).withExpiresAt(expireDate);
-        return builder.sign(Algorithm.HMAC256(EncryptUtil.SECRET_KEY));
+        Algorithm algorithm = null;
+        try {
+            algorithm = Algorithm.HMAC256(EncryptUtil.SECRET_KEY);
+        } catch (UnsupportedEncodingException e) {
+            throw new BusinessException(ResultStatus.RES_UNKNOWN_ERROR, "令牌生成失败");
+        }
+        return builder.sign(algorithm);
     }
 
     /**
@@ -53,8 +59,14 @@ public class JwtUtil {
      * @param token token
      * @return 负载列表
      */
-    public static Map<String, Claim> verify(String token) throws UnsupportedEncodingException {
-        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(EncryptUtil.SECRET_KEY)).build();
+    public static Map<String, Claim> verify(String token) {
+        JWTVerifier verifier = null;
+        try {
+            verifier = JWT.require(Algorithm.HMAC256(EncryptUtil.SECRET_KEY)).build();
+        } catch (UnsupportedEncodingException e) {
+            // token解析失败，当做非法请求
+            throw new BusinessException(ResultStatus.RES_ILLEGAL_REQUEST);
+        }
         DecodedJWT jwt = verifier.verify(EncryptUtil.decryptByAES(token));
         return jwt.getClaims();
     }
@@ -65,14 +77,7 @@ public class JwtUtil {
      * @param request 请求体
      */
     public static JwtDataLoad getDataLoad(HttpServletRequest request) {
-        JwtDataLoad jwtDataLoad = null;
-        try {
-            jwtDataLoad = new JwtDataLoad(JwtUtil.verify(RequestUtil.getToken(request)));
-        } catch (UnsupportedEncodingException e) {
-            // token解析失败，当做非法请求
-            throw new BusinessException(ResultStatus.RES_ILLEGAL_REQUEST);
-        }
-        return jwtDataLoad;
+        return new JwtDataLoad(JwtUtil.verify(RequestUtil.getToken(request)));
     }
 
 }

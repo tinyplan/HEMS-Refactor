@@ -7,7 +7,6 @@ import com.tinyplan.exam.common.service.TokenService;
 import com.tinyplan.exam.common.utils.JwtUtil;
 import com.tinyplan.exam.common.utils.PrefixUtil;
 import com.tinyplan.exam.common.utils.RoleUtil;
-import com.tinyplan.exam.dao.AdminMapper;
 import com.tinyplan.exam.dao.CandidateMapper;
 import com.tinyplan.exam.dao.RoleMapper;
 import com.tinyplan.exam.entity.po.CandidateDetail;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,13 +74,12 @@ public class UserServiceImpl implements UserService {
      * @return token
      */
     @Override
-    public TokenVO login(String username, String password, UserType type) throws UnsupportedEncodingException {
-        TokenVO token = null;
+    public TokenVO login(String username, String password, UserType type) {
         UserHandlerService handlerService = UserHandlerFactory.getHandlerService(type);
         if (handlerService == null) {
             throw new BusinessException();
         }
-        User user = handlerService.getUser(username, type);
+        User user = handlerService.getUser(username);
         // 用户不存在
         if (user == null) {
             throw new BusinessException(ResultStatus.RES_LOGIN_UNKNOWN_USER);
@@ -92,10 +89,10 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ResultStatus.RES_LOGIN_WRONG_PASS);
         }
         // 登录成功后，生成token
-        token = new TokenVO();
+        TokenVO token = new TokenVO();
         token.setToken(tokenService.generateToken(user.getId(), user.getRoleId()));
         // 准备详细信息
-        DetailVO detail = handlerService.getUserDetail(user, type);
+        DetailVO detail = handlerService.getUserDetail(user);
         // 获取角色信息
         List<String> roleIdList = new ArrayList<>();
         roleIdList.add(user.getRoleId());
@@ -106,7 +103,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public DetailVO getUserInfo(String token) throws UnsupportedEncodingException {
+    public DetailVO getUserInfo(String token){
         // 先从token中取出 userId 和 roleId
         JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
         // 获取用户类型
@@ -121,12 +118,34 @@ public class UserServiceImpl implements UserService {
             return detail;
         }
         // 未命中, 再次查询数据库
-        User user = handlerService.getUser(load.getUserId(), type);
+        User user = handlerService.getUser(load.getUserId());
         if(user == null) {
             throw new BusinessException(ResultStatus.RES_LOGIN_UNKNOWN_USER);
         }
-        detail = handlerService.getUserDetail(user, type);
+        detail = handlerService.getUserDetail(user);
+        // 这里再找不到的话, 则用户不存在(不太可能发生这种情况)
+        if (detail == null) {
+            throw new BusinessException(ResultStatus.RES_INFO_NOT_EXIST);
+        }
         return detail;
+    }
+
+    @Override
+    public void updateUserInfo(String token, CandidateDetail newDetail) {
+        JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
+        newDetail.setId(load.getUserId());
+        Integer result = candidateMapper.updateCandidateDetail(newDetail);
+        if (result != 1) {
+            throw new BusinessException(ResultStatus.RES_INFO_UPDATE_FAILED);
+        }
+        // 获取新的信息并更新缓存
+        UserHandlerService handlerService = UserHandlerFactory.getHandlerService(UserType.CANDIDATE);
+        User user = handlerService.getUser(load.getUserId());
+        DetailVO detail = handlerService.getUserDetail(user);
+        List<String> roleIdList = new ArrayList<>();
+        roleIdList.add(user.getRoleId());
+        detail.setRoles(roleMapper.getRolesByIds(roleIdList));
+        tokenService.setValue(token, detail);
     }
 
     @Override

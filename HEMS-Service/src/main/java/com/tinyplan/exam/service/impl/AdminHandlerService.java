@@ -23,12 +23,12 @@ public class AdminHandlerService implements UserHandlerService, InitializingBean
     private QiniuProperties qiniuProperties;
 
     @Override
-    public User getUser(String username, UserType type) {
+    public User getUser(String username) {
         return adminMapper.getAdminByUsername(username);
     }
 
     @Override
-    public DetailVO getUserDetail(User user, UserType type) {
+    public DetailVO getUserDetail(User user) {
         AdminDetailVO detail = new AdminDetailVO();
         detail.copyValueFromUser(user);
         detail.setAvatar(qiniuProperties.getDomain() + detail.getAvatar());

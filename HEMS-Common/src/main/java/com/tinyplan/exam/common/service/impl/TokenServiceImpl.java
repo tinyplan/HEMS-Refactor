@@ -26,7 +26,7 @@ public class TokenServiceImpl implements TokenService {
      * @param userId 用户ID
      * @return token(若选择加密, 则会使用AES对称加密方式)
      */
-    public String generateToken(String userId, String roleId) throws UnsupportedEncodingException {
+    public String generateToken(String userId, String roleId) {
         Map<String , String> map = new HashMap<>();
         map.put(JwtDataLoad.CLAIM_KEY_USER_ID, userId);
         map.put(JwtDataLoad.CLAIM_KEY_ROLE_ID, roleId);

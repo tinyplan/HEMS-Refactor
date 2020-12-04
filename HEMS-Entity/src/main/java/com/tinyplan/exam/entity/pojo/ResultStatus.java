@@ -10,6 +10,7 @@ public enum ResultStatus {
     RES_LOGIN_WRONG_PASS(20002, "密码错误"),
     // 获取用户信息
     RES_INFO_NOT_EXIST(20006, "用户信息不存在"),
+    RES_INFO_UPDATE_FAILED(20007, "更新用户信息失败"),
     // 注册
     RES_REGISTER_EXISTED_USER(20010, "存在重复用户"),
     RES_REGISTER_FAIL(20011, "注册失败"),

@@ -1,10 +1,8 @@
 package com.tinyplan.exam.common.service;
 
-import java.io.UnsupportedEncodingException;
-
 public interface TokenService {
 
-    String generateToken(String userId, String roleId) throws UnsupportedEncodingException;
+    String generateToken(String userId, String roleId);
 
     Object getValue(String token);
 

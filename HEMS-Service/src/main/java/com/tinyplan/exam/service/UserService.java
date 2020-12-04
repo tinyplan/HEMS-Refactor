@@ -14,9 +14,12 @@ public interface UserService {
     // 考生专用
     void register(User user, CandidateDetail detail);
 
-    TokenVO login(String username, String password, UserType type) throws UnsupportedEncodingException;
+    TokenVO login(String username, String password, UserType type);
 
-    DetailVO getUserInfo(String token) throws UnsupportedEncodingException;
+    DetailVO getUserInfo(String token);
+
+    // 考生专用
+    void updateUserInfo(String token, CandidateDetail newDetail);
 
     void logout(String token);
 

@@ -3,6 +3,7 @@ server:
   servlet:
     context-path: /HEMS/portal
 
+
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
@@ -26,3 +27,6 @@ spring:
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.tinyplan.exam.entity.po
+logging:
+  level:
+    com.tinyplan.exam.dao: debug

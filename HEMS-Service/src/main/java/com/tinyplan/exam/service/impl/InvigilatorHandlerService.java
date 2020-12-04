@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 public class InvigilatorHandlerService implements UserHandlerService, InitializingBean {
 
     @Override
-    public User getUser(String username, UserType type) {
+    public User getUser(String username) {
         return null;
     }
 
     @Override
-    public DetailVO getUserDetail(User user, UserType type) {
+    public DetailVO getUserDetail(User user) {
         return null;
     }
 

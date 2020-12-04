@@ -17,6 +17,31 @@
         candidate_id AS id, real_name AS realName, gender, contact, email, edu_back AS eduBack, home_address AS homeAddress, avatar
     </sql>
 
+    <update id="updateCandidateDetail">
+        UPDATE candidate_detail
+        <set>
+            <if test="realName != null and realName != ''">
+                real_name = #{realName},
+            </if>
+            <if test="gender != null and gender != ''">
+                gender = #{gender},
+            </if>
+            <if test="contact != null and contact != ''">
+                contact = #{contact},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="eduBack != null and eduBack != ''">
+                edu_back = #{eduBack},
+            </if>
+            <if test="homeAddress != null and homeAddress != ''">
+                home_address = #{homeAddress},
+            </if>
+        </set>
+        WHERE candidate_id = #{id}
+    </update>
+
     <select id="getMaxId" resultType="java.lang.Integer">
         SELECT max(id)
         FROM candidate

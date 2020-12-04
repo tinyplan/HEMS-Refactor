@@ -4,6 +4,7 @@ import com.tinyplan.exam.common.annotation.Authorization;
 import com.tinyplan.exam.common.utils.RequestUtil;
 import com.tinyplan.exam.entity.form.PortalLoginForm;
 import com.tinyplan.exam.entity.form.RegisterForm;
+import com.tinyplan.exam.entity.form.UpdateUserDetailForm;
 import com.tinyplan.exam.entity.po.CandidateDetail;
 import com.tinyplan.exam.entity.po.User;
 import com.tinyplan.exam.entity.pojo.ApiResult;
@@ -12,6 +13,7 @@ import com.tinyplan.exam.entity.pojo.ResultStatus;
 import com.tinyplan.exam.entity.pojo.UserType;
 import com.tinyplan.exam.entity.vo.DetailVO;
 import com.tinyplan.exam.entity.vo.TokenVO;
+import com.tinyplan.exam.service.DataInjectService;
 import com.tinyplan.exam.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,48 +22,67 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 
 @RestController("portalUserController")
-@RequestMapping({"/user", "/candidate"})
+@RequestMapping({"/candidate"})
 public class UserController {
 
     @Resource(name = "userService")
     private UserService userService;
 
+    @Resource(name = "dataInjectServiceImpl")
+    private DataInjectService dataInjectService;
+
+    /**
+     * 用户注册
+     *
+     * @param registerForm 注册表单
+     */
     @PostMapping("/register")
     public ApiResult<Object> register(@RequestBody RegisterForm registerForm) {
         // TODO 注册参数校验
         // 先把表单中的信息封装好
-        User user = new User();
-        user.setAccountName(registerForm.getUsername());
-        // 这里先设置为原始密码
-        user.setPassword(registerForm.getPassword());
-        // 只有学生可以注册
-        user.setRoleId("r1003");
-        CandidateDetail detail = new CandidateDetail();
-        detail.setContact(registerForm.getTelephone());
-        detail.setEmail(registerForm.getEmail());
-        // 设置头像
-        detail.setAvatar("default_admin_avatar.png");
+        User user = dataInjectService.injectUser(registerForm);
+        CandidateDetail detail = dataInjectService.injectCandidateDetail(registerForm);
         userService.register(user, detail);
         return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
     }
 
+    /**
+     * 登录表单
+     *
+     * @param loginForm 登录表单
+     */
     @PostMapping("/login")
-    public ApiResult<TokenVO> login(@RequestBody PortalLoginForm loginForm) throws UnsupportedEncodingException {
+    public ApiResult<TokenVO> login(@RequestBody PortalLoginForm loginForm) {
         // TODO 监考教师的登录
         TokenVO token = userService.login(loginForm.getUsername(), loginForm.getPassword(), UserType.CANDIDATE);
         return new ApiResult<>(ResultStatus.RES_SUCCESS, token);
     }
 
-    @GetMapping("/info")
+    /**
+     * 获取用户信息
+     *
+     * @param request 请求体
+     */
+    @GetMapping("")
     @Authorization
-    public ApiResult<DetailVO> info(HttpServletRequest request) throws UnsupportedEncodingException {
+    public ApiResult<DetailVO> info(HttpServletRequest request) {
         String token = RequestUtil.getToken(request);
         DetailVO userInfo = userService.getUserInfo(token);
-        // 这里再找不到的话, 则用户不存在(不太可能发生这种情况)
-        if (userInfo == null) {
-            throw new BusinessException(ResultStatus.RES_INFO_NOT_EXIST);
-        }
         return new ApiResult<>(ResultStatus.RES_SUCCESS, userInfo);
+    }
+
+    /**
+     * 修改用户信息
+     */
+    @PatchMapping("")
+    @Authorization
+    public ApiResult<Object> updateInfo(HttpServletRequest request,
+                                        @RequestBody UpdateUserDetailForm form){
+        String token = RequestUtil.getToken(request);
+        // 将表单中的信息封装成对象
+        CandidateDetail detail = dataInjectService.injectCandidateDetail(form);
+        userService.updateUserInfo(token, detail);
+        return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
     }
 
     @PostMapping("/logout")

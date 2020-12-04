@@ -24,12 +24,12 @@ public class CandidateHandlerService implements UserHandlerService, Initializing
     private QiniuProperties qiniuProperties;
 
     @Override
-    public User getUser(String username, UserType type) {
+    public User getUser(String username) {
         return candidateMapper.getCandidateByUsername(username);
     }
 
     @Override
-    public DetailVO getUserDetail(User user, UserType type) {
+    public DetailVO getUserDetail(User user) {
         CandidateDetailVO detail = new CandidateDetailVO(candidateMapper.getCandidateDetail(user.getId()));
         detail.copyValueFromUser(user);
         detail.setAvatar(qiniuProperties.getDomain() + detail.getAvatar());

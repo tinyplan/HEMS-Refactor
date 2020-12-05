@@ -1,11 +1,15 @@
 package com.tinyplan.exam.service.impl;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import com.tinyplan.exam.common.properties.HEMSProperties;
 import com.tinyplan.exam.common.service.TokenService;
 import com.tinyplan.exam.common.utils.JwtUtil;
 import com.tinyplan.exam.common.utils.PrefixUtil;
+import com.tinyplan.exam.common.utils.RequestUtil;
 import com.tinyplan.exam.common.utils.RoleUtil;
 import com.tinyplan.exam.dao.CandidateMapper;
 import com.tinyplan.exam.dao.RoleMapper;
@@ -15,23 +19,40 @@ import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.JwtDataLoad;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
 import com.tinyplan.exam.entity.pojo.UserType;
+import com.tinyplan.exam.entity.pojo.aliyun.CertificateBack;
+import com.tinyplan.exam.entity.pojo.aliyun.CertificateFront;
 import com.tinyplan.exam.entity.vo.DetailVO;
 import com.tinyplan.exam.entity.vo.TokenVO;
+import com.tinyplan.exam.service.ApiService;
+import com.tinyplan.exam.service.ImageService;
 import com.tinyplan.exam.service.UserHandlerService;
 import com.tinyplan.exam.service.UserService;
 import com.tinyplan.exam.service.factory.UserHandlerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
+    @Resource(name = "hemsProperties")
+    private HEMSProperties hemsProperties;
+
     @Resource(name = "tokenServiceImpl")
     private TokenService tokenService;
+
+    @Resource(name = "imageServiceImpl")
+    private ImageService imageService;
+
+    @Resource(name = "apiServiceImpl")
+    private ApiService apiService;
 
     @Resource(name = "roleMapper")
     private RoleMapper roleMapper;
@@ -70,7 +91,7 @@ public class UserServiceImpl implements UserService {
      *
      * @param username 用户名(用户ID 或 账户名)
      * @param password 密码
-     * @param type 登录用户类型
+     * @param type     登录用户类型
      * @return token
      */
     @Override
@@ -103,7 +124,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public DetailVO getUserInfo(String token){
+    public DetailVO getUserInfo(String token) {
         // 先从token中取出 userId 和 roleId
         JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
         // 获取用户类型
@@ -119,7 +140,7 @@ public class UserServiceImpl implements UserService {
         }
         // 未命中, 再次查询数据库
         User user = handlerService.getUser(load.getUserId());
-        if(user == null) {
+        if (user == null) {
             throw new BusinessException(ResultStatus.RES_LOGIN_UNKNOWN_USER);
         }
         detail = handlerService.getUserDetail(user);
@@ -139,7 +160,69 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ResultStatus.RES_INFO_UPDATE_FAILED);
         }
         // 获取新的信息并更新缓存
-        UserHandlerService handlerService = UserHandlerFactory.getHandlerService(UserType.CANDIDATE);
+        this.flushCache(token, UserType.CANDIDATE);
+    }
+
+    @Override
+    public void updatePassword(String token, String oldPassword, String newPassword) {
+        JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
+        UserHandlerService handlerService = UserHandlerFactory.getHandlerService(RoleUtil.getUserType(load.getRoleId()));
+        // 比对旧密码是否正确
+        User user = handlerService.getUser(load.getUserId());
+        if (!SecureUtil.md5(oldPassword).equals(user.getPassword())) {
+            throw new BusinessException(ResultStatus.RES_INFO_WRONG_OLD_PASSWORD);
+        }
+        handlerService.updatePassword(load.getUserId(), newPassword);
+        // 删除token, 让用户重新登录
+        tokenService.deleteToken(token);
+    }
+
+    @Override
+    public void certificate(HttpServletRequest request, MultipartFile front, MultipartFile back, String realName, String idCard) {
+        // 保存两张图片到本地路径
+        JwtDataLoad load = JwtUtil.getDataLoad(request);
+        String path = this.generateTmpPath(request);
+        String frontFilename = load.getUserId() + "_" + front.getOriginalFilename();
+        String backFilename = load.getUserId() + "_" + back.getOriginalFilename();
+        imageService.saveToLocal(path, frontFilename, front);
+        imageService.saveToLocal(path, backFilename, back);
+        // 识别
+        File imageFront = new File(path + File.separator + frontFilename);
+        File imageBack = new File(path + File.separator + backFilename);
+        CertificateFront certificateFront = apiService.certificateFront(imageFront);
+        CertificateBack certificateBack = apiService.certificateBack(imageBack);
+        // 删除缓存的图片
+        imageService.deleteLocal(imageFront);
+        imageService.deleteLocal(imageBack);
+        // 数据校验
+        Date end = DateUtil.parse(certificateBack.getEnd_date());
+        long interval = DateUtil.between(new Date(), end, DateUnit.DAY, false);
+        if (interval < 0) {
+            throw new BusinessException(ResultStatus.RES_CERTIFICATE_OUT_OF_DATE);
+        }
+        if (!realName.equals(certificateFront.getName()) || !idCard.equals(certificateFront.getNum())) {
+            throw new BusinessException(ResultStatus.RES_CERTIFICATE_FAILED);
+        }
+        // 保存数据
+        candidateMapper.updateCertificateInfo(load.getUserId(), realName, idCard);
+        // 更新缓存
+        this.flushCache(RequestUtil.getToken(request), UserType.CANDIDATE);
+    }
+
+    @Override
+    public void logout(String token) {
+        // 删除token的时候, 失败了也没有问题(大概), 登录的时候重新生成一个就好了
+        tokenService.deleteToken(token);
+    }
+
+    /**
+     * 刷新缓存中的信息
+     *
+     * @param token
+     */
+    private void flushCache(String token, UserType type) {
+        JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
+        UserHandlerService handlerService = UserHandlerFactory.getHandlerService(type);
         User user = handlerService.getUser(load.getUserId());
         DetailVO detail = handlerService.getUserDetail(user);
         List<String> roleIdList = new ArrayList<>();
@@ -148,19 +231,14 @@ public class UserServiceImpl implements UserService {
         tokenService.setValue(token, detail);
     }
 
-    @Override
-    public void updatePassword(String token, String newPassword) {
-        JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
-        UserHandlerService handlerService = UserHandlerFactory.getHandlerService(RoleUtil.getUserType(load.getRoleId()));
-        handlerService.updatePassword(load.getUserId(), newPassword);
-        // 删除token, 让用户重新登录
-        tokenService.deleteToken(token);
-    }
-
-    @Override
-    public void logout(String token) {
-        // 删除token的时候, 失败了也没有问题(大概), 登录的时候重新生成一个就好了
-        tokenService.deleteToken(token);
+    /**
+     * 构建文件保存的路径(项目根路径 + 缓存路径 + 用户ID命名的目录)
+     *
+     * @return 保存路径
+     */
+    private String generateTmpPath(HttpServletRequest request) {
+        JwtDataLoad load = JwtUtil.getDataLoad(request);
+        return request.getServletContext().getRealPath(hemsProperties.getCertificateTmpDir() + load.getUserId());
     }
 
 }

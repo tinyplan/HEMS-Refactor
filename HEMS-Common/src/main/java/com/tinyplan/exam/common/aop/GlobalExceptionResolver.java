@@ -23,14 +23,14 @@ public class GlobalExceptionResolver {
     @ResponseBody
     public ApiResult<Object> handleException(Exception e){
         LOGGER.error(e.getMessage());
-        return new ApiResult<>(ResultStatus.RES_UNKNOWN_ERROR,null);
+        return new ApiResult<>(ResultStatus.RES_UNKNOWN_ERROR, null);
     }
 
     @ExceptionHandler(BusinessException.class)
     @ResponseBody
     public ApiResult<Object> handleException(BusinessException e){
         LOGGER.error(e.getMsg());
-        return new ApiResult<>(e.getStatus(),null);
+        return new ApiResult<>(e.getStatus(), e.getMsg(), null);
     }
 
 }

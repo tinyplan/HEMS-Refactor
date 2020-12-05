@@ -15,10 +15,13 @@ import com.tinyplan.exam.entity.vo.DetailVO;
 import com.tinyplan.exam.entity.vo.TokenVO;
 import com.tinyplan.exam.service.DataInjectService;
 import com.tinyplan.exam.service.UserService;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.*;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
@@ -96,11 +99,32 @@ public class UserController {
     public ApiResult<Object> updatePassword(HttpServletRequest request,
                                             @RequestBody Map<String, String> params) {
         String token = RequestUtil.getToken(request);
+        String oldPassword = params.get("oldPassword");
         String newPassword = params.get("newPassword");
-        if (newPassword == null || "".equals(newPassword)) {
-            throw  new BusinessException(ResultStatus.RES_UNKNOWN_ERROR, "参数校验异常");
+        if (oldPassword == null || "".equals(oldPassword) || newPassword == null || "".equals(newPassword)) {
+            throw new BusinessException(ResultStatus.RES_UNKNOWN_ERROR, "参数校验异常");
         }
-        userService.updatePassword(token, newPassword);
+        userService.updatePassword(token, oldPassword, newPassword);
+        return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
+    }
+
+    /**
+     * 实名认证
+     *
+     * @param request 请求体
+     * @param front 身份证正面
+     * @param back 身份证背面
+     * @param realName 真实姓名
+     * @param idCard 身份证号
+     */
+    @PostMapping("/certification")
+    @Authorization
+    public ApiResult<Object> certification(HttpServletRequest request,
+                                           @RequestParam("imageFront") MultipartFile front,
+                                           @RequestParam("imageBack") MultipartFile back,
+                                           @RequestParam("realName") String realName,
+                                           @RequestParam("idCard") String idCard){
+        userService.certificate(request, front, back, realName, idCard);
         return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
     }
 

@@ -42,6 +42,17 @@ public interface CandidateMapper {
     Integer updateCandidateDetail(CandidateDetail detail);
 
     /**
+     * 更新实名信息
+     *
+     * @param userId 用户ID
+     * @param realName 真实姓名
+     * @param idCard 身份证号
+     */
+    Integer updateCertificateInfo(@Param("userId") String userId,
+                                  @Param("realName") String realName,
+                                  @Param("idCard") String idCard);
+
+    /**
      * 获取考生详细信息
      *
      * @param userId 用户ID

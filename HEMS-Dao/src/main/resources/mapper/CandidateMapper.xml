@@ -48,6 +48,12 @@
         where candidate_id = #{userId}
     </update>
 
+    <update id="updateCertificateInfo">
+        UPDATE candidate_detail
+        SET real_name = #{realName}, id_card = #{idCard}
+        WHERE candidate_id = #{userId}
+    </update>
+
     <select id="getMaxId" resultType="java.lang.Integer">
         SELECT max(id)
         FROM candidate

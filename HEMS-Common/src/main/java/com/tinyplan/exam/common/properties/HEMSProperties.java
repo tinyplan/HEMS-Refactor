@@ -20,6 +20,8 @@ public class HEMSProperties {
     private String newsTmpDir;
     @Value("${hems.default.news.cover}")
     private String newsCoverImg;
+    @Value("${hems.certificate.tmp}")
+    private String certificateTmpDir;
 
     public boolean isCors() {
         return cors;
@@ -43,5 +45,9 @@ public class HEMSProperties {
 
     public String getNewsCoverImg() {
         return newsCoverImg;
+    }
+
+    public String getCertificateTmpDir() {
+        return certificateTmpDir;
     }
 }

@@ -152,11 +152,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserInfo(String token, CandidateDetail newDetail) {
+    public void updateUserInfo(String token, String accountName, CandidateDetail newDetail) {
         JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
+        User user = candidateMapper.getCandidateByUsername(load.getUserId());
+        if (user != null) {
+            throw new BusinessException(ResultStatus.RES_INFO_EXISTED_ACCOUNT_NAME);
+        }
         newDetail.setId(load.getUserId());
-        Integer result = candidateMapper.updateCandidateDetail(newDetail);
-        if (result != 1) {
+        Integer result1 = candidateMapper.updateCandidateDetail(newDetail);
+        Integer result2 = candidateMapper.updateAccountName(load.getUserId(), accountName);
+        if (result1 + result2 != 2) {
             throw new BusinessException(ResultStatus.RES_INFO_UPDATE_FAILED);
         }
         // 获取新的信息并更新缓存

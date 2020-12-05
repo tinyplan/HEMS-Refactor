@@ -85,7 +85,7 @@ public class UserController {
         String token = RequestUtil.getToken(request);
         // 将表单中的信息封装成对象
         CandidateDetail detail = dataInjectService.injectCandidateDetail(form);
-        userService.updateUserInfo(token, detail);
+        userService.updateUserInfo(token, form.getAccountName(), detail);
         return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
     }
 

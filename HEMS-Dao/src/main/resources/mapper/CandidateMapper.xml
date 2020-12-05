@@ -54,6 +54,12 @@
         WHERE candidate_id = #{userId}
     </update>
 
+    <update id="updateAccountName">
+        UPDATE candidate
+        SET account_name = #{accountName}
+        WHERE candidate_id = #{userId}
+    </update>
+
     <select id="getMaxId" resultType="java.lang.Integer">
         SELECT max(id)
         FROM candidate

@@ -28,6 +28,12 @@ public interface CandidateMapper {
     User getCandidateByUsername(@Param("username") String username);
 
     /**
+     * 更改账户名
+     *
+     */
+    Integer updateAccountName(@Param("userId") String userId, @Param("accountName") String accountName);
+
+    /**
      * 新增考生的详细信息
      *
      * @param detail 新增的详细信息

@@ -21,7 +21,7 @@ public interface UserService {
     DetailVO getUserInfo(String token);
 
     // 考生专用
-    void updateUserInfo(String token, CandidateDetail newDetail);
+    void updateUserInfo(String token, String account, CandidateDetail newDetail);
 
     void updatePassword(String token, String oldPassword, String newPassword);
 

@@ -4,7 +4,7 @@
 <mapper namespace="com.tinyplan.exam.dao.ExamMapper">
 
     <sql id="examColumn">
-        exam_id AS examId, level, exam_name AS examName, capacity, fee, pass_line AS passLine
+        exam_id AS examId, `level`, exam_name AS examName, capacity, fee, pass_line AS passLine
     </sql>
 
     <select id="getExamByLevel" resultType="com.tinyplan.exam.entity.po.Exam">

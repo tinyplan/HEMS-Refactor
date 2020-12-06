@@ -4,7 +4,7 @@
 <mapper namespace="com.tinyplan.exam.dao.NewsMapper">
 
     <sql id="rawNewsColumn">
-        news_id, title, publish_date, publisher, cover_img, content, content_img, type
+        news_id, title, publish_date, publisher, cover_img, content, content_img, `type`
     </sql>
 
     <sql id="newsColumn">

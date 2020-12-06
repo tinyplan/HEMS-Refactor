@@ -38,7 +38,7 @@ public class ExamController {
         if (!validatorService.check(form)) {
             throw new BusinessException(ResultStatus.RES_INVALID_PARAM);
         }
-        examService.addExamInfo(dataInjectService.injectExamDetail(form));
+        examService.addExamDetail(dataInjectService.injectExamDetail(form));
         return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
     }
 

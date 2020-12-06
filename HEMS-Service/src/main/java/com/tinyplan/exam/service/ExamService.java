@@ -8,6 +8,6 @@ public interface ExamService {
 
     Map<String, Object> getExamByLevel(Integer level);
 
-    void addExamInfo(ExamDetail examDetail);
+    void addExamDetail(ExamDetail examDetail);
 
 }

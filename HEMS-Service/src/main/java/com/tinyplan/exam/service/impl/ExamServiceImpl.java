@@ -7,6 +7,9 @@ import com.tinyplan.exam.dao.ExamDetailMapper;
 import com.tinyplan.exam.dao.ExamMapper;
 import com.tinyplan.exam.entity.po.Exam;
 import com.tinyplan.exam.entity.po.ExamDetail;
+import com.tinyplan.exam.entity.po.News;
+import com.tinyplan.exam.entity.pojo.BusinessException;
+import com.tinyplan.exam.entity.pojo.ResultStatus;
 import com.tinyplan.exam.entity.pojo.type.ExamStatus;
 import com.tinyplan.exam.service.ExamService;
 import org.springframework.stereotype.Service;
@@ -45,7 +48,12 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     @Transactional
-    public void addExamInfo(ExamDetail detail) {
+    public void addExamDetail(ExamDetail detail) {
+        // 判断有无存活中的相同考试
+        List<ExamDetail> livedExamDetailList = examDetailMapper.getLivedExamDetail(detail.getExamId());
+        if (livedExamDetailList.size() != 0) {
+            throw new BusinessException(ResultStatus.RES_EXAM_DETAIL_HAS_LIVED_EXAM);
+        }
         // 生成该场考试的序列号
         String date = DateUtil.format(new Date(), "yyyyMMdd");
         String maxId = String.valueOf(CommonUtil.checkMaxId(examDetailMapper.getMaxId()) + 1);

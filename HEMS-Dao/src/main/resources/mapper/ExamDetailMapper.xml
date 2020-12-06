@@ -17,6 +17,12 @@
         FROM exam_detail
     </select>
 
+    <select id="getLivedExamDetail" resultType="com.tinyplan.exam.entity.po.ExamDetail">
+        SELECT <include refid="examDetailColumn"/>
+        FROM exam_detail
+        WHERE exam_id = #{examId} and status &lt; 6 and status != -1
+    </select>
+
     <insert id="insertExamDetail">
         INSERT INTO exam_detail (<include refid="rawExamDetailColumn"/>)
         VALUES (#{examNo}, #{examId}, #{level}, #{examName}, #{enrollStart}, #{enrollEnd}, #{examStart}, #{examEnd}, #{interval}, #{capacity}, #{fee}, #{passLine}, #{status})

@@ -28,6 +28,9 @@ public enum ResultStatus {
     RES_CERTIFICATE_RECOGNIZE_FAILED(20030, "身份证识别失败"),
     RES_CERTIFICATE_OUT_OF_DATE(20031, "身份证已失效"),
     RES_CERTIFICATE_FAILED(20032, "身份证信息与输入的信息不匹配"),
+    // 发布考试信息
+    RES_EXAM_DETAIL_HAS_LIVED_EXAM(20035, "有正在进行中的考试"),
+
 
     RES_ILLEGAL_REQUEST(40003, "非法请求"),
     RES_UNKNOWN_ERROR(50000, "未知异常"),

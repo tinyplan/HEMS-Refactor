@@ -3,8 +3,10 @@ package com.tinyplan.exam.service.impl;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.tinyplan.exam.common.properties.HEMSProperties;
 import com.tinyplan.exam.common.utils.*;
+import com.tinyplan.exam.dao.AdminMapper;
 import com.tinyplan.exam.dao.NewsMapper;
 import com.tinyplan.exam.entity.po.News;
+import com.tinyplan.exam.entity.po.User;
 import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.JwtDataLoad;
 import com.tinyplan.exam.entity.pojo.type.ObjectType;
@@ -26,10 +28,15 @@ import java.util.List;
 @Service("newsServiceImpl")
 public class NewsServiceImpl implements NewsService {
 
+    @Resource(name = "adminMapper")
+    private AdminMapper adminMapper;
+
     @Resource(name = "newsMapper")
     private NewsMapper newsMapper;
+
     @Resource(name = "imageServiceImpl")
     private ImageService imageService;
+
     @Resource(name = "hemsProperties")
     private HEMSProperties hemsProperties;
 
@@ -119,6 +126,20 @@ public class NewsServiceImpl implements NewsService {
         paginationData.setTotal(newsVOList.size());
         paginationData.setTableData(PaginationUtil.getLogicPagination(newsVOList, pageSize));
         return paginationData;
+    }
+
+    /**
+     * 获取一条新闻
+     *
+     * @param newsId 新闻ID
+     * @return 新闻信息
+     */
+    @Override
+    public NewsVO getOneNews(String newsId) {
+        NewsVO newsVO = imageService.handleNewsImage(newsMapper.getNews(newsId));
+        User user = adminMapper.getAdminByUsername(newsVO.getPublisher());
+        newsVO.setPublisherName(user.getAccountName());
+        return newsVO;
     }
 
     /**

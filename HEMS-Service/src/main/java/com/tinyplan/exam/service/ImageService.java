@@ -21,4 +21,6 @@ public interface ImageService {
 
     List<NewsVO> handleNewsImage(List<News> newsList);
 
+    NewsVO handleNewsImage(News news);
+
 }

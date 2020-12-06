@@ -1,5 +1,6 @@
 package com.tinyplan.exam.service;
 
+import com.tinyplan.exam.entity.po.News;
 import com.tinyplan.exam.entity.vo.NewsVO;
 import com.tinyplan.exam.entity.vo.Pagination;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,8 @@ public interface NewsService {
     void publishNews(HttpServletRequest request, String title, String content, List<String> filenameList);
 
     Pagination<NewsVO> getAllNews(Integer pageSize);
+
+    NewsVO getOneNews(String newsId);
 
     void deleteNews(String newsId);
 

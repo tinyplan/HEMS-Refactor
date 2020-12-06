@@ -163,6 +163,14 @@ public class ImageServiceImpl implements ImageService {
         return result;
     }
 
+    @Override
+    public NewsVO handleNewsImage(News news) {
+        NewsVO newsVO = new NewsVO(news);
+        bindCoverImageUrl(newsVO);
+        bindContentImageUrl(newsVO, news);
+        return newsVO;
+    }
+
     /**
      * 批量删除上传的文件
      *

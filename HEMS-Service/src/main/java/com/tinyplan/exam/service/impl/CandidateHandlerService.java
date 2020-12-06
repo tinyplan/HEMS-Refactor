@@ -1,12 +1,10 @@
 package com.tinyplan.exam.service.impl;
 
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.digest.DigestUtil;
 import com.tinyplan.exam.common.properties.QiniuProperties;
 import com.tinyplan.exam.dao.CandidateMapper;
-import com.tinyplan.exam.entity.po.CandidateDetail;
 import com.tinyplan.exam.entity.po.User;
-import com.tinyplan.exam.entity.pojo.UserType;
+import com.tinyplan.exam.entity.pojo.type.UserType;
 import com.tinyplan.exam.entity.vo.CandidateDetailVO;
 import com.tinyplan.exam.entity.vo.DetailVO;
 import com.tinyplan.exam.service.UserHandlerService;

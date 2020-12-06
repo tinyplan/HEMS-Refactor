@@ -1,11 +1,15 @@
 package com.tinyplan.exam.service.impl;
 
+import com.tinyplan.exam.entity.form.AddExamInfoForm;
 import com.tinyplan.exam.entity.form.RegisterForm;
 import com.tinyplan.exam.entity.form.UpdateUserDetailForm;
 import com.tinyplan.exam.entity.po.CandidateDetail;
+import com.tinyplan.exam.entity.po.ExamDetail;
 import com.tinyplan.exam.entity.po.User;
 import com.tinyplan.exam.service.DataInjectService;
 import org.springframework.stereotype.Service;
+
+import javax.crypto.spec.DESedeKeySpec;
 
 @Service
 public class DataInjectServiceImpl implements DataInjectService {
@@ -40,6 +44,22 @@ public class DataInjectServiceImpl implements DataInjectService {
         detail.setEmail(form.getEmail());
         detail.setEduBack(form.getEduBack());
         detail.setHomeAddress(form.getHomeAddress());
+        return detail;
+    }
+
+    @Override
+    public ExamDetail injectExamDetail(AddExamInfoForm form) {
+        ExamDetail detail = new ExamDetail();
+        detail.setExamId(form.getExamId());
+        detail.setLevel(form.getLevel());
+        detail.setExamName(form.getExamName());
+        detail.setEnrollStart(form.getEnrollStart());
+        detail.setEnrollEnd(form.getEnrollEnd());
+        detail.setExamStart(form.getExamStart());
+        detail.setExamEnd(form.getExamEnd());
+        detail.setCapacity(form.getCapacity());
+        detail.setFee(form.getFee());
+        detail.setPassLine(form.getPassLine());
         return detail;
     }
 }

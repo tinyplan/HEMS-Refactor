@@ -7,7 +7,7 @@ import com.tinyplan.exam.dao.NewsMapper;
 import com.tinyplan.exam.entity.po.News;
 import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.JwtDataLoad;
-import com.tinyplan.exam.entity.pojo.ObjectType;
+import com.tinyplan.exam.entity.pojo.type.ObjectType;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
 import com.tinyplan.exam.entity.vo.NewsVO;
 import com.tinyplan.exam.entity.vo.Pagination;
@@ -18,11 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Service("newsServiceImpl")

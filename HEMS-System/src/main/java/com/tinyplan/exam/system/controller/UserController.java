@@ -6,7 +6,7 @@ import com.tinyplan.exam.entity.form.SystemLoginForm;
 import com.tinyplan.exam.entity.pojo.ApiResult;
 import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
-import com.tinyplan.exam.entity.pojo.UserType;
+import com.tinyplan.exam.entity.pojo.type.UserType;
 import com.tinyplan.exam.entity.vo.DetailVO;
 import com.tinyplan.exam.entity.vo.TokenVO;
 import com.tinyplan.exam.service.UserService;
@@ -25,7 +25,7 @@ public class UserController {
     @PostMapping("/login")
     public ApiResult<TokenVO> login(@RequestBody SystemLoginForm loginForm) {
         // TODO 参数校验
-        TokenVO token = userService.login(loginForm.getUsername(), loginForm.getPassword(), UserType.CANDIDATE);
+        TokenVO token = userService.login(loginForm.getUsername(), loginForm.getPassword(), UserType.EDU_ADMIN);
         return new ApiResult<>(ResultStatus.RES_SUCCESS, token);
     }
 

@@ -31,7 +31,8 @@ public enum ResultStatus {
 
     RES_ILLEGAL_REQUEST(40003, "非法请求"),
     RES_UNKNOWN_ERROR(50000, "未知异常"),
-    RES_API_CALL_FAILED(50001, "API调用失败");
+    RES_API_CALL_FAILED(50001, "API调用失败"),
+    RES_INVALID_PARAM(50002, "参数校验异常");
 
     private final int code;
     private final String message;

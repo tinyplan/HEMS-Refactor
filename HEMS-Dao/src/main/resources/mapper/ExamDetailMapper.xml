@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tinyplan.exam.dao.ExamDetailMapper">
+
+    <sql id="rawExamDetailColumn">
+        exam_no, exam_id, level, exam_name, enroll_start, enroll_end, exam_start, exam_end, capacity, fee, pass_line, status
+    </sql>
+
+    <sql id="examDetailColumn">
+        exam_no AS examNo, exam_id AS examId, level, exam_name AS examName,
+        enroll_start AS enrollStart, enroll_end AS enrollEnd, exam_start AS examStart, exam_end AS examEnd,
+        capacity, fee, pass_line AS passLine, status
+    </sql>
+
+    <select id="getMaxId" resultType="java.lang.Integer">
+        SELECT max(id)
+        FROM exam_detail
+    </select>
+
+    <insert id="insertExamDetail">
+        INSERT INTO exam_detail (<include refid="rawExamDetailColumn"/>)
+        VALUES (#{examNo}, #{examId}, #{level}, #{examName}, #{enrollStart}, #{enrollEnd}, #{examStart}, #{examEnd}, #{capacity}, #{fee}, #{passLine}, #{status})
+    </insert>
+</mapper>

@@ -10,19 +10,16 @@ import com.tinyplan.exam.entity.po.User;
 import com.tinyplan.exam.entity.pojo.ApiResult;
 import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
-import com.tinyplan.exam.entity.pojo.UserType;
+import com.tinyplan.exam.entity.pojo.type.UserType;
 import com.tinyplan.exam.entity.vo.DetailVO;
 import com.tinyplan.exam.entity.vo.TokenVO;
 import com.tinyplan.exam.service.DataInjectService;
 import com.tinyplan.exam.service.UserService;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.*;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 @RestController("portalUserController")

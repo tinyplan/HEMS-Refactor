@@ -1,6 +1,6 @@
 package com.tinyplan.exam.service.factory;
 
-import com.tinyplan.exam.entity.pojo.UserType;
+import com.tinyplan.exam.entity.pojo.type.UserType;
 import com.tinyplan.exam.service.UserHandlerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

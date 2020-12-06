@@ -1,4 +1,4 @@
-package com.tinyplan.exam.entity.pojo;
+package com.tinyplan.exam.entity.pojo.type;
 
 public enum UserType {
     CANDIDATE("Candidate"),

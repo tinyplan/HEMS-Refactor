@@ -3,7 +3,7 @@ package com.tinyplan.exam.service.impl;
 import com.tinyplan.exam.common.properties.QiniuProperties;
 import com.tinyplan.exam.dao.AdminMapper;
 import com.tinyplan.exam.entity.po.User;
-import com.tinyplan.exam.entity.pojo.UserType;
+import com.tinyplan.exam.entity.pojo.type.UserType;
 import com.tinyplan.exam.entity.vo.AdminDetailVO;
 import com.tinyplan.exam.entity.vo.DetailVO;
 import com.tinyplan.exam.service.UserHandlerService;

@@ -10,7 +10,7 @@ import com.tinyplan.exam.common.service.TokenService;
 import com.tinyplan.exam.common.utils.JwtUtil;
 import com.tinyplan.exam.common.utils.PrefixUtil;
 import com.tinyplan.exam.common.utils.RequestUtil;
-import com.tinyplan.exam.common.utils.RoleUtil;
+import com.tinyplan.exam.common.utils.type.RoleUtil;
 import com.tinyplan.exam.dao.CandidateMapper;
 import com.tinyplan.exam.dao.RoleMapper;
 import com.tinyplan.exam.entity.po.CandidateDetail;
@@ -18,7 +18,7 @@ import com.tinyplan.exam.entity.po.User;
 import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.JwtDataLoad;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
-import com.tinyplan.exam.entity.pojo.UserType;
+import com.tinyplan.exam.entity.pojo.type.UserType;
 import com.tinyplan.exam.entity.pojo.aliyun.CertificateBack;
 import com.tinyplan.exam.entity.pojo.aliyun.CertificateFront;
 import com.tinyplan.exam.entity.vo.DetailVO;
@@ -152,6 +152,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUserInfo(String token, String accountName, CandidateDetail newDetail) {
         JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
         User user = candidateMapper.getCandidateByUsername(load.getUserId());
@@ -169,6 +170,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updatePassword(String token, String oldPassword, String newPassword) {
         JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
         UserHandlerService handlerService = UserHandlerFactory.getHandlerService(RoleUtil.getUserType(load.getRoleId()));
@@ -183,6 +185,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void certificate(HttpServletRequest request, MultipartFile front, MultipartFile back, String realName, String idCard) {
         // 保存两张图片到本地路径
         JwtDataLoad load = JwtUtil.getDataLoad(request);
@@ -200,7 +203,7 @@ public class UserServiceImpl implements UserService {
         imageService.deleteLocal(imageFront);
         imageService.deleteLocal(imageBack);
         // 数据校验
-        Date end = DateUtil.parse(certificateBack.getEnd_date());
+        Date end = DateUtil.parse(certificateBack.getEnd_date(), "yyyyMMdd");
         long interval = DateUtil.between(new Date(), end, DateUnit.DAY, false);
         if (interval < 0) {
             throw new BusinessException(ResultStatus.RES_CERTIFICATE_OUT_OF_DATE);

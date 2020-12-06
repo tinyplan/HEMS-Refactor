@@ -1,10 +1,8 @@
 package com.tinyplan.exam.common.utils;
 
-import com.tinyplan.exam.entity.pojo.ObjectType;
-import com.tinyplan.exam.entity.pojo.UserType;
-import sun.security.provider.PolicySpiFile;
+import com.tinyplan.exam.entity.pojo.type.ObjectType;
+import com.tinyplan.exam.entity.pojo.type.UserType;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 

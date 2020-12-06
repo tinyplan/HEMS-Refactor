@@ -2,14 +2,12 @@ package com.tinyplan.exam.service;
 
 import com.tinyplan.exam.entity.po.CandidateDetail;
 import com.tinyplan.exam.entity.po.User;
-import com.tinyplan.exam.entity.pojo.UserType;
-import com.tinyplan.exam.entity.vo.AdminDetailVO;
+import com.tinyplan.exam.entity.pojo.type.UserType;
 import com.tinyplan.exam.entity.vo.DetailVO;
 import com.tinyplan.exam.entity.vo.TokenVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 
 public interface UserService {
 

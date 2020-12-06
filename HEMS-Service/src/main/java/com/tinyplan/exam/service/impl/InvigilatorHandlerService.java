@@ -1,7 +1,7 @@
 package com.tinyplan.exam.service.impl;
 
 import com.tinyplan.exam.entity.po.User;
-import com.tinyplan.exam.entity.pojo.UserType;
+import com.tinyplan.exam.entity.pojo.type.UserType;
 import com.tinyplan.exam.entity.vo.DetailVO;
 import com.tinyplan.exam.service.UserHandlerService;
 import com.tinyplan.exam.service.factory.UserHandlerFactory;

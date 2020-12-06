@@ -1,6 +1,6 @@
-package com.tinyplan.exam.common.utils;
+package com.tinyplan.exam.common.utils.type;
 
-import com.tinyplan.exam.entity.pojo.UserType;
+import com.tinyplan.exam.entity.pojo.type.UserType;
 
 import java.util.HashMap;
 import java.util.Map;

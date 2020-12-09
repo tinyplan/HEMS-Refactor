@@ -19,6 +19,11 @@ public class EnrollController {
     @Resource(name = "enrollServiceImpl")
     private EnrollService enrollService;
 
+    /**
+     * 考生报名
+     *
+     * @param form 提交的报名表单
+     */
     @PostMapping("/enroll")
     @Authorization
     public ApiResult<Map<String, String>> enroll(@RequestBody EnrollForm form){

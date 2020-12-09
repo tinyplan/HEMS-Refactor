@@ -11,6 +11,7 @@ public class ExamDetail {
     private String examEnd;
     private Integer interval;
     private Integer capacity;
+    private Integer remain;
     private Integer fee;
     private Double passLine;
     private Integer status;
@@ -119,5 +120,13 @@ public class ExamDetail {
 
     public void setInterval(Integer interval) {
         this.interval = interval;
+    }
+
+    public Integer getRemain() {
+        return remain;
+    }
+
+    public void setRemain(Integer remain) {
+        this.remain = remain;
     }
 }

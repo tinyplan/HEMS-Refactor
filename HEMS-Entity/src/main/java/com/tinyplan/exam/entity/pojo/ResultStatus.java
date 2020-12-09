@@ -30,7 +30,12 @@ public enum ResultStatus {
     RES_CERTIFICATE_FAILED(20032, "身份证信息与输入的信息不匹配"),
     // 发布考试信息
     RES_EXAM_DETAIL_HAS_LIVED_EXAM(20035, "有正在进行中的考试"),
-
+    // 考生报名
+    RES_EXAM_NOT_DURING_ENROLL(20040, "未在报名时间"),
+    RES_EXAM_CAPACITY_OVERFLOW(20041, "报考名额已满"),
+    RES_ENROLL_HAVE_NOT_EXAM_QUALIFICATION(20042, "没有考试资格"),
+    RES_ENROLL_SAME_EXAM(20043, "不能报考相同的考试"),
+    RES_ENROLL_TIME_CONFLICT(20044, "考试时间冲突"),
 
     RES_ILLEGAL_REQUEST(40003, "非法请求"),
     RES_UNKNOWN_ERROR(50000, "未知异常"),

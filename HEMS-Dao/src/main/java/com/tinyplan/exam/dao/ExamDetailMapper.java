@@ -13,7 +13,20 @@ public interface ExamDetailMapper {
 
     Integer insertExamDetail(ExamDetail detail);
 
+    /**
+     * 查询是否有存活的考试
+     * @param examId
+     * @return
+     */
     List<ExamDetail> getLivedExamDetail(@Param("examId") String examId);
+
+    /**
+     * 查询此类型的考试以及符合查询的状态
+     *
+     * @param examId 考试ID
+     * @param status 考试状态
+     */
+    ExamDetail getExamDetailByIdAndStatus(@Param("examId") String examId, @Param("status") Integer status);
 
     /**
      * 修改考试状态

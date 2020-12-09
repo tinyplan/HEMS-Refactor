@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tinyplan.exam.dao.ScoreMapper">
+
+    <sql id="scoreColumn">
+        candidate_id AS candidateId, candidate_no AS candidateNo, exam_no AS examNo, `level`, score, `pass`
+    </sql>
+
+    <select id="getScoreByCandidateId" resultType="com.tinyplan.exam.entity.po.Score">
+        SELECT <include refid="scoreColumn"/>
+        FROM exam_score
+        WHERE candidate_id = #{candidateId} AND `pass` = #{pass}
+        ORDER BY `level` DESC
+    </select>
+</mapper>

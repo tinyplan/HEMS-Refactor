@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tinyplan.exam.dao.EnrollMapper">
+
+    <sql id="enrollColumn">
+        enroll_id AS enrollId, exam_no AS examNo, candidate_id AS candidateId, real_name AS realName, gender, contact,
+        email, edu_back AS eduBack, home_address AS homeAddress, status
+    </sql>
+    <sql id="rawEnrollColumn">
+        enroll_id, exam_no, candidate_id, real_name, gender, contact, email, edu_back, home_address, status
+    </sql>
+
+    <insert id="insertEnroll">
+        INSERT INTO enroll (<include refid="rawEnrollColumn"/>)
+        VALUES (#{enroll.enrollId}, #{enroll.examNo}, #{detail.id}, #{detail.realName}, #{detail.gender},
+        #{detail.contact}, #{detail.email}, #{detail.eduBack}, #{detail.homeAddress}, #{enroll.status})
+    </insert>
+
+    <select id="getLivedEnrollByCandidateId" resultType="com.tinyplan.exam.entity.po.Enroll">
+        SELECT <include refid="enrollColumn"/>
+        FROM enroll
+        WHERE candidate_id = #{candidateId} AND status != -1 AND status != 2
+    </select>
+</mapper>

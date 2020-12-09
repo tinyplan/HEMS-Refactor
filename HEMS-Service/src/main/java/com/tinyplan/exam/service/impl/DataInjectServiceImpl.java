@@ -58,6 +58,8 @@ public class DataInjectServiceImpl implements DataInjectService {
         detail.setExamStart(form.getExamStart());
         detail.setExamEnd(form.getExamEnd());
         detail.setCapacity(form.getCapacity());
+        // 设置初始剩余人数
+        detail.setRemain(form.getCapacity());
         detail.setFee(form.getFee());
         detail.setPassLine(form.getPassLine());
         return detail;

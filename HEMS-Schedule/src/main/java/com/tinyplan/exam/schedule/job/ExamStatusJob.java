@@ -1,6 +1,6 @@
 package com.tinyplan.exam.schedule.job;
 
-import com.tinyplan.exam.common.utils.type.ExamStatusUtil;
+import com.tinyplan.exam.common.utils.type.StatusUtil;
 import com.tinyplan.exam.entity.dto.ExamDetailExecuteResult;
 import com.tinyplan.exam.service.schedule.ExamStatusJobService;
 import org.quartz.JobExecutionContext;
@@ -36,8 +36,8 @@ public class ExamStatusJob extends QuartzJobBean {
             for (ExamDetailExecuteResult result : resultList) {
                 LOGGER.info(String.format(ExamDetailExecuteResult.LOG_TEMPLATE,
                         result.getExamNo(), result.getExamName(),
-                        ExamStatusUtil.getStatus(result.getOriginalStatus()).getDescription(),
-                        ExamStatusUtil.getStatus(result.getUpdateStatus()).getDescription(),
+                        StatusUtil.getExamStatus(result.getOriginalStatus()).getDescription(),
+                        StatusUtil.getExamStatus(result.getUpdateStatus()).getDescription(),
                         result.getExecuteResult()));
             }
         }

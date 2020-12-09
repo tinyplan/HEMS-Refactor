@@ -64,7 +64,7 @@ public class ExamServiceImpl implements ExamService {
         // 生成该场考试的序列号
         String date = DateUtil.format(new Date(), "yyyyMMdd");
         String maxId = String.valueOf(CommonUtil.checkMaxId(examDetailMapper.getMaxId()) + 1);
-        detail.setExamNo(String.join("_", date, detail.getExamId(), maxId));
+        detail.setExamNo(String.join("_", detail.getExamId(), date, maxId));
         // 设置考试时长
         Date examStart = DateUtil.parse(detail.getExamStart());
         Date examEnd = DateUtil.parse(detail.getExamEnd());

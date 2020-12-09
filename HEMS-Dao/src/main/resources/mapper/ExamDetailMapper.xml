@@ -4,12 +4,13 @@
 <mapper namespace="com.tinyplan.exam.dao.ExamDetailMapper">
 
     <sql id="rawExamDetailColumn">
-        exam_no, exam_id, `level`, exam_name, enroll_start, enroll_end, exam_start, exam_end, `interval`, capacity, fee, pass_line, status
+        exam_no, exam_id, `level`, exam_name, enroll_start, enroll_end, exam_start, exam_end, `interval`, capacity, remain, fee, pass_line, status
     </sql>
 
     <sql id="examDetailColumn">
         exam_no AS examNo, exam_id AS examId, `level`, exam_name AS examName,
-        enroll_start AS enrollStart, enroll_end AS enrollEnd, exam_start AS examStart, exam_end AS examEnd, `interval`, capacity, fee, pass_line AS passLine, status
+        enroll_start AS enrollStart, enroll_end AS enrollEnd, exam_start AS examStart, exam_end AS examEnd, `interval`,
+        capacity, remain, fee, pass_line AS passLine, status
     </sql>
 
     <update id="updateExamStatus">
@@ -35,8 +36,14 @@
         WHERE exam_no = #{examNo}
     </select>
 
+    <select id="getExamDetailByIdAndStatus" resultType="com.tinyplan.exam.entity.po.ExamDetail">
+        SELECT <include refid="examDetailColumn"/>
+        FROM exam_detail
+        WHERE exam_id = #{examId} AND status = #{status}
+    </select>
+
     <insert id="insertExamDetail">
         INSERT INTO exam_detail (<include refid="rawExamDetailColumn"/>)
-        VALUES (#{examNo}, #{examId}, #{level}, #{examName}, #{enrollStart}, #{enrollEnd}, #{examStart}, #{examEnd}, #{interval}, #{capacity}, #{fee}, #{passLine}, #{status})
+        VALUES (#{examNo}, #{examId}, #{level}, #{examName}, #{enrollStart}, #{enrollEnd}, #{examStart}, #{examEnd}, #{interval}, #{capacity}, #{remain}, #{fee}, #{passLine}, #{status})
     </insert>
 </mapper>

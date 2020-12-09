@@ -18,7 +18,7 @@ class SystemApplicationTests {
 
     @Test
     void contextLoads() {
-        System.out.println(candidateMapper.getMaxId());
+
     }
 
 }

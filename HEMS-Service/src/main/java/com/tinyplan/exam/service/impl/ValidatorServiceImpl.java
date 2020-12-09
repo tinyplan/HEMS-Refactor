@@ -46,7 +46,7 @@ public class ValidatorServiceImpl implements ValidatorService {
     }
 
     private boolean later(Date begin, Date end) {
-        return DateUtil.between(begin, end, DateUnit.SECOND, false) > 0;
+        return DateUtil.between(begin, end, DateUnit.MINUTE, false) > 0;
     }
 }
 

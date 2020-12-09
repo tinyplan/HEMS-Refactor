@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tinyplan.exam.dao.ExamStatusJobMapper">
+
+    <sql id="examStatusJobColumn">
+        job_id AS jobId, exam_no AS examNo, execute_time AS executeTime, original_status AS originalStatus, update_status AS updateStatus, status
+    </sql>
+
+    <update id="updateJobStatus">
+        UPDATE job_exam_status
+        SET status = #{status}
+        WHERE job_id = #{jobId}
+    </update>
+
+    <select id="getJobByLivedStatus" resultType="com.tinyplan.exam.entity.po.StatusJob">
+        SELECT <include refid="examStatusJobColumn"/>
+        FROM job_exam_status
+        WHERE status = 0
+    </select>
+
+</mapper>

@@ -15,4 +15,14 @@ public interface ExamDetailMapper {
 
     List<ExamDetail> getLivedExamDetail(@Param("examId") String examId);
 
+    /**
+     * 修改考试状态
+     *
+     * @param examNo 考试序号
+     * @param status 修改状态
+     */
+    Integer updateExamStatus(@Param("examNo") String examNo, @Param("status") Integer status);
+
+    ExamDetail getExamDetailByNo(@Param("examNo") String examNo);
+
 }

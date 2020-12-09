@@ -1,0 +1,20 @@
+server:
+  port: 8100
+
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ems_1?useUnicode=true&characterEncoding=UTF-8&&useSSL=false
+    username: root
+    password: 15858066139689XZ
+    # 连接池具体配置
+    hikari:
+      connection-timeout: 3000
+      maximum-pool-size: 15
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+logging:
+  level:
+    com.tinyplan.exam.dao: debug

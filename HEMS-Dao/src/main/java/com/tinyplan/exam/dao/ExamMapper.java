@@ -11,4 +11,6 @@ public interface ExamMapper {
 
     List<Exam> getExamByLevel(@Param("level") Integer level);
 
+    List<Exam> getExam();
+
 }

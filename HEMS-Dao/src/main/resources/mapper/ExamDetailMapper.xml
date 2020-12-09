@@ -12,6 +12,12 @@
         enroll_start AS enrollStart, enroll_end AS enrollEnd, exam_start AS examStart, exam_end AS examEnd, `interval`, capacity, fee, pass_line AS passLine, status
     </sql>
 
+    <update id="updateExamStatus">
+        UPDATE exam_detail
+        SET status = #{status}
+        WHERE examNo = #{examNo}
+    </update>
+
     <select id="getMaxId" resultType="java.lang.Integer">
         SELECT max(id)
         FROM exam_detail
@@ -21,6 +27,12 @@
         SELECT <include refid="examDetailColumn"/>
         FROM exam_detail
         WHERE exam_id = #{examId} and status &lt; 6 and status != -1
+    </select>
+
+    <select id="getExamDetailByNo" resultType="com.tinyplan.exam.entity.po.ExamDetail">
+        SELECT <include refid="examDetailColumn"/>
+        FROM exam_detail
+        WHERE exam_no = #{examNo}
     </select>
 
     <insert id="insertExamDetail">

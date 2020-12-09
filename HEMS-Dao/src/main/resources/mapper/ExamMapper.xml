@@ -13,4 +13,9 @@
         WHERE level = #{level}
     </select>
 
+    <select id="getExam" resultType="com.tinyplan.exam.entity.po.Exam">
+        SELECT <include refid="examColumn"/>
+        FROM exam
+    </select>
+
 </mapper>

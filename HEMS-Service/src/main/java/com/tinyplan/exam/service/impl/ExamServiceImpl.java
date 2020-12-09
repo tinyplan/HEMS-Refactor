@@ -31,6 +31,13 @@ public class ExamServiceImpl implements ExamService {
     private ExamDetailMapper examDetailMapper;
 
     @Override
+    public Map<String, List<Exam>> getExam() {
+        Map<String, List<Exam>> map = new HashMap<>();
+        map.put("examInfo", examMapper.getExam());
+        return map;
+    }
+
+    @Override
     public Map<String, Object> getExamByLevel(Integer level) {
         List<Exam> examList = examMapper.getExamByLevel(level);
         String[] nameList = new String[examList.size()];

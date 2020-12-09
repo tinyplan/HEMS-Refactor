@@ -11,7 +11,7 @@
 
     <groupId>com.tinyplan</groupId>
     <artifactId>exam</artifactId>
-    <version>${hems.version}</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>HEMS</name>
     <packaging>pom</packaging>
 
@@ -23,6 +23,7 @@
         <module>HEMS-Dao</module>
         <module>HEMS-Entity</module>
         <module>HEMS-Common</module>
+        <module>HEMS-Schedule</module>
     </modules>
 
     <!-- 配置 -->
@@ -77,6 +78,11 @@
             <dependency>
                 <groupId>com.tinyplan.exam</groupId>
                 <artifactId>common</artifactId>
+                <version>${hems.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tinyplan.exam</groupId>
+                <artifactId>schedule</artifactId>
                 <version>${hems.version}</version>
             </dependency>
         </dependencies>

@@ -1,11 +1,13 @@
 package com.tinyplan.exam.service.impl;
 
+import com.tinyplan.exam.common.utils.type.StatusUtil;
 import com.tinyplan.exam.entity.form.AddExamInfoForm;
 import com.tinyplan.exam.entity.form.RegisterForm;
 import com.tinyplan.exam.entity.form.UpdateUserDetailForm;
 import com.tinyplan.exam.entity.po.CandidateDetail;
 import com.tinyplan.exam.entity.po.ExamDetail;
 import com.tinyplan.exam.entity.po.User;
+import com.tinyplan.exam.entity.vo.ExamDetailVO;
 import com.tinyplan.exam.service.DataInjectService;
 import org.springframework.stereotype.Service;
 
@@ -63,5 +65,19 @@ public class DataInjectServiceImpl implements DataInjectService {
         detail.setFee(form.getFee());
         detail.setPassLine(form.getPassLine());
         return detail;
+    }
+
+    @Override
+    public ExamDetailVO injectExamDetailVO(ExamDetail examDetail) {
+        ExamDetailVO detailVO = new ExamDetailVO();
+        detailVO.setExamNo(examDetail.getExamNo());
+        detailVO.setLevel(StatusUtil.getExamLevel(examDetail.getLevel()).getDescription());
+        detailVO.setExamName(examDetail.getExamName());
+        detailVO.setEnrollStart(examDetail.getEnrollStart());
+        detailVO.setEnrollEnd(examDetail.getEnrollEnd());
+        detailVO.setExamStart(examDetail.getExamStart());
+        detailVO.setExamEnd(examDetail.getExamEnd());
+        detailVO.setStatus(StatusUtil.getExamStatus(examDetail.getStatus()).getDescription());
+        return detailVO;
     }
 }

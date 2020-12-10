@@ -16,7 +16,7 @@
     <update id="updateExamStatus">
         UPDATE exam_detail
         SET status = #{status}
-        WHERE examNo = #{examNo}
+        WHERE exam_no = #{examNo}
     </update>
 
     <select id="getMaxId" resultType="java.lang.Integer">
@@ -27,7 +27,7 @@
     <select id="getLivedExamDetail" resultType="com.tinyplan.exam.entity.po.ExamDetail">
         SELECT <include refid="examDetailColumn"/>
         FROM exam_detail
-        WHERE exam_id = #{examId} and status &lt; 6 and status != -1
+        WHERE exam_id = #{examId} AND status &lt; 6 AND status != -1
     </select>
 
     <select id="getExamDetailByNo" resultType="com.tinyplan.exam.entity.po.ExamDetail">
@@ -40,6 +40,12 @@
         SELECT <include refid="examDetailColumn"/>
         FROM exam_detail
         WHERE exam_id = #{examId} AND status = #{status}
+    </select>
+
+    <select id="getAllLivedExamDetail" resultType="com.tinyplan.exam.entity.po.ExamDetail">
+        SELECT <include refid="examDetailColumn"/>
+        FROM exam_detail
+        WHERE status &lt; 6 AND status != -1
     </select>
 
     <insert id="insertExamDetail">

@@ -15,10 +15,15 @@ public interface ExamDetailMapper {
 
     /**
      * 查询是否有存活的考试
-     * @param examId
-     * @return
+     *
+     * @param examId 考试ID
      */
     List<ExamDetail> getLivedExamDetail(@Param("examId") String examId);
+
+    /**
+     * 查询所有存活的考试
+     */
+    List<ExamDetail> getAllLivedExamDetail();
 
     /**
      * 查询此类型的考试以及符合查询的状态

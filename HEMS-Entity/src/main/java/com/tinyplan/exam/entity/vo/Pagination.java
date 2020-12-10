@@ -1,7 +1,6 @@
 package com.tinyplan.exam.entity.vo;
 
 import java.util.List;
-import java.util.Map;
 
 public class Pagination<T> {
     private Integer total;

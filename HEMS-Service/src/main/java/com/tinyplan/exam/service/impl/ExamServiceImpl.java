@@ -3,26 +3,29 @@ package com.tinyplan.exam.service.impl;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.tinyplan.exam.common.utils.CommonUtil;
+import com.tinyplan.exam.common.utils.PaginationUtil;
 import com.tinyplan.exam.dao.ExamDetailMapper;
 import com.tinyplan.exam.dao.ExamMapper;
 import com.tinyplan.exam.entity.po.Exam;
 import com.tinyplan.exam.entity.po.ExamDetail;
-import com.tinyplan.exam.entity.po.News;
 import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
 import com.tinyplan.exam.entity.pojo.type.ExamStatus;
+import com.tinyplan.exam.entity.vo.ExamDetailVO;
+import com.tinyplan.exam.entity.vo.Pagination;
+import com.tinyplan.exam.service.DataInjectService;
 import com.tinyplan.exam.service.ExamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ExamServiceImpl implements ExamService {
+
+    @Resource(name = "dataInjectServiceImpl")
+    private DataInjectService dataInjectService;
 
     @Resource(name = "examMapper")
     private ExamMapper examMapper;
@@ -73,5 +76,29 @@ public class ExamServiceImpl implements ExamService {
         detail.setStatus(ExamStatus.BEFORE_ENROLL.getCode());
         // 插入表中
         examDetailMapper.insertExamDetail(detail);
+    }
+
+    @Override
+    public Pagination<ExamDetailVO> getExam(Integer pageSize) {
+        List<ExamDetailVO> result = new ArrayList<>();
+        List<ExamDetail> allLivedExamList = examDetailMapper.getAllLivedExamDetail();
+        for (ExamDetail examDetail : allLivedExamList) {
+            result.add(dataInjectService.injectExamDetailVO(examDetail));
+        }
+        Pagination<ExamDetailVO> pagination = new Pagination<>();
+        pagination.setTotal(result.size());
+        pagination.setTableData(PaginationUtil.getLogicPagination(result, pageSize));
+        return pagination;
+    }
+
+    @Override
+    public void updateExamStatus(String examNo, Integer status) {
+        ExamDetail examDetail = examDetailMapper.getExamDetailByNo(examNo);
+        // 考试状态只能向后改动, 且只能改动一位
+        if (status - examDetail.getStatus() == 1) {
+            examDetailMapper.updateExamStatus(examNo, status);
+        } else {
+            throw new BusinessException(ResultStatus.RES_UPDATE_ILLEGAL_EXAM_STATUS);
+        }
     }
 }

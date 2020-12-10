@@ -1,13 +1,14 @@
 package com.tinyplan.exam.portal.controller;
 
 import com.tinyplan.exam.common.annotation.Authorization;
+import com.tinyplan.exam.entity.form.EnrollApplyForm;
 import com.tinyplan.exam.entity.form.EnrollForm;
 import com.tinyplan.exam.entity.form.PayForm;
 import com.tinyplan.exam.entity.pojo.ApiResult;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
-import com.tinyplan.exam.entity.vo.Pagination;
+import com.tinyplan.exam.service.ApplyService;
+import com.tinyplan.exam.service.DataInjectService;
 import com.tinyplan.exam.service.EnrollService;
-import jdk.nashorn.internal.objects.NativeUint8Array;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -20,6 +21,12 @@ public class EnrollController {
 
     @Resource(name = "enrollServiceImpl")
     private EnrollService enrollService;
+
+    @Resource(name = "applyServiceImpl")
+    private ApplyService applyService;
+
+    @Resource(name = "dataInjectServiceImpl")
+    private DataInjectService dataInjectService;
 
     /**
      * 考生报名
@@ -44,4 +51,9 @@ public class EnrollController {
         return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
     }
 
+    @PostMapping("/apply")
+    public ApiResult<Object> submitApply(@RequestBody EnrollApplyForm form){
+        applyService.addEnrollApply(dataInjectService.injectEnrollApply(form));
+        return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
+    }
 }

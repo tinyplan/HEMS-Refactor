@@ -23,6 +23,7 @@ public class PrefixUtil {
         USER_PREFIX_MAP.put(UserType.EDU_ADMIN, "edu");
         OBJECT_PREFIX_MAP = new HashMap<>();
         OBJECT_PREFIX_MAP.put(ObjectType.NEWS, "news");
+        OBJECT_PREFIX_MAP.put(ObjectType.ENROLL_APPLY, "ea");
     }
 
     public static String getUserPrefix(UserType type) {

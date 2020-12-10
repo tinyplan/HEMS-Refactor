@@ -1,5 +1,6 @@
 package com.tinyplan.exam.entity.pojo.type;
 
 public enum ObjectType {
-    NEWS;
+    NEWS,
+    ENROLL_APPLY;
 }

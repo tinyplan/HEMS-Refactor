@@ -101,4 +101,9 @@ public class EnrollServiceImpl implements EnrollService {
             throw new BusinessException(ResultStatus.RES_ENROLL_HAVE_NOT_EXAM_QUALIFICATION);
         }
     }
+
+    @Override
+    public void payFees(String enrollId) {
+        enrollMapper.updateEnrollStatus(enrollId, EnrollStatus.ENROLL_SUCCESS.getCode());
+    }
 }

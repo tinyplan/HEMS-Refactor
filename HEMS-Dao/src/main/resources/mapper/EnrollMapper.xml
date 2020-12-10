@@ -17,6 +17,12 @@
         #{detail.contact}, #{detail.email}, #{detail.eduBack}, #{detail.homeAddress}, #{enroll.status})
     </insert>
 
+    <update id="updateEnrollStatus">
+        UPDATE enroll
+        SET status = #{status}
+        WHERE enroll_id = #{enrollId}
+    </update>
+
     <select id="getLivedEnrollByCandidateId" resultType="com.tinyplan.exam.entity.po.Enroll">
         SELECT <include refid="enrollColumn"/>
         FROM enroll

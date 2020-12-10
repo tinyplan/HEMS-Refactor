@@ -19,4 +19,6 @@ public interface EnrollMapper {
 
     Integer insertEnroll(@Param("enroll") Enroll enroll, @Param("detail") CandidateDetail detail);
 
+    Integer updateEnrollStatus(@Param("enrollId") String enrollId, @Param("status") Integer status);
+
 }

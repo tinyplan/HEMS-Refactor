@@ -6,4 +6,6 @@ public interface EnrollService {
 
     String candidateEnroll(String examId, CandidateDetail detail);
 
+    void payFees(String enrollId);
+
 }

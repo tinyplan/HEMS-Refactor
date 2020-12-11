@@ -23,7 +23,7 @@
             <if test="realName != null and realName != ''">
                 real_name = #{realName},
             </if>
-            <if test="gender != null and gender != ''">
+            <if test="gender != null'">
                 gender = #{gender},
             </if>
             <if test="contact != null and contact != ''">

@@ -14,7 +14,7 @@ public interface ExamDetailMapper {
     Integer insertExamDetail(ExamDetail detail);
 
     /**
-     * 查询是否有存活的考试
+     * 查询是否有存活的考试(成绩发布之前都记做存活)
      *
      * @param examId 考试ID
      */
@@ -42,5 +42,11 @@ public interface ExamDetailMapper {
     Integer updateExamStatus(@Param("examNo") String examNo, @Param("status") Integer status);
 
     ExamDetail getExamDetailByNo(@Param("examNo") String examNo);
+
+    List<ExamDetail> getExamDetailByStatus(@Param("status") Integer status);
+
+    List<ExamDetail> getExamDetailByCondition(@Param("examName") String examName,
+                                              @Param("level") Integer level,
+                                              @Param("status") Integer status);
 
 }

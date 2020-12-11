@@ -48,6 +48,28 @@
         WHERE status &lt; 6 AND status != -1
     </select>
 
+    <select id="getExamDetailByStatus" resultType="com.tinyplan.exam.entity.po.ExamDetail">
+        SELECT <include refid="examDetailColumn"/>
+        FROM exam_detail
+        WHERE status = #{status}
+    </select>
+
+    <select id="getExamDetailByCondition" resultType="com.tinyplan.exam.entity.po.ExamDetail">
+        SELECT <include refid="examDetailColumn"/>
+        FROM exam_detail
+        <where>
+            <if test="examName != null and examName != ''">
+                exam_name LIKE concat('%', #{examName}, '%')
+            </if>
+            <if test="level != null">
+                AND `level` = #{level}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
     <insert id="insertExamDetail">
         INSERT INTO exam_detail (<include refid="rawExamDetailColumn"/>)
         VALUES (#{examNo}, #{examId}, #{level}, #{examName}, #{enrollStart}, #{enrollEnd}, #{examStart}, #{examEnd}, #{interval}, #{capacity}, #{remain}, #{fee}, #{passLine}, #{status})

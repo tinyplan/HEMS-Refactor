@@ -2,6 +2,8 @@ package com.tinyplan.exam.service.impl;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import com.tinyplan.exam.common.utils.PaginationUtil;
+import com.tinyplan.exam.common.utils.type.StatusUtil;
 import com.tinyplan.exam.dao.EnrollMapper;
 import com.tinyplan.exam.dao.ExamDetailMapper;
 import com.tinyplan.exam.dao.ScoreMapper;
@@ -13,15 +15,22 @@ import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
 import com.tinyplan.exam.entity.pojo.type.EnrollStatus;
 import com.tinyplan.exam.entity.pojo.type.ExamStatus;
+import com.tinyplan.exam.entity.vo.Pagination;
+import com.tinyplan.exam.entity.vo.SystemEnrollVO;
+import com.tinyplan.exam.service.DataInjectService;
 import com.tinyplan.exam.service.EnrollService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class EnrollServiceImpl implements EnrollService {
+
+    @Resource(name = "dataInjectServiceImpl")
+    private DataInjectService dataInjectService;
 
     @Resource(name = "examDetailMapper")
     private ExamDetailMapper examDetailMapper;
@@ -105,5 +114,62 @@ public class EnrollServiceImpl implements EnrollService {
     @Override
     public void payFees(String enrollId) {
         enrollMapper.updateEnrollStatus(enrollId, EnrollStatus.ENROLL_SUCCESS.getCode());
+    }
+
+    @Override
+    public Pagination<SystemEnrollVO> getEnrollForSystemByCondition(Integer pageSize, String type, String content) {
+        // 查询出来的报名信息
+        List<Enroll> enrollList = null;
+        // 符合信息的考试信息
+        List<ExamDetail> enrollingList = null;
+        Integer examDetailStatus = ExamStatus.DURING_ENROLL.getCode();
+        switch (type) {
+            case "realName":
+                // 获取正在报名的考试列表
+                // enrollingList = examDetailMapper.getExamDetailByStatus(examDetailStatus);
+                enrollingList = examDetailMapper.getExamDetailByCondition(null, null, examDetailStatus);
+                enrollList = enrollMapper.getEnrollByCondition(enrollingList, content, null);
+                break;
+            case "examName":
+                enrollingList = examDetailMapper.getExamDetailByCondition(content, null, examDetailStatus);
+                if (enrollingList == null || enrollingList.size() == 0) {
+                    break;
+                }
+                enrollList = enrollMapper.getEnrollByCondition(enrollingList, null, null);
+                break;
+            case "level":
+                enrollingList = examDetailMapper.getExamDetailByCondition(null, Integer.valueOf(content), examDetailStatus);
+                if (enrollingList == null || enrollingList.size() == 0) {
+                    break;
+                }
+                enrollList = enrollMapper.getEnrollByCondition(enrollingList, null, null);
+                break;
+            case "status":
+                enrollingList = examDetailMapper.getExamDetailByCondition(null, null, examDetailStatus);
+                enrollList = enrollMapper.getEnrollByCondition(enrollingList, null, Integer.valueOf(content));
+                break;
+            default:
+                enrollList = new ArrayList<>();
+        }
+        Pagination<SystemEnrollVO> pagination = new Pagination<>();
+        // 若考试情况为空, 直接返回空信息
+        if (enrollingList == null || enrollingList.size() == 0) {
+            pagination.setTotal(0);
+            pagination.setTableData(PaginationUtil.getLogicPagination(new ArrayList<>(), pageSize));
+        } else {
+            List<SystemEnrollVO> systemEnrollVOList = new ArrayList<>(enrollList.size());
+            for (Enroll enroll : enrollList) {
+                systemEnrollVOList.add(dataInjectService.injectSystemEnrollVO(enroll,
+                        examDetailMapper.getExamDetailByNo(enroll.getExamNo())));
+            }
+            pagination.setTotal(enrollList.size());
+            pagination.setTableData(PaginationUtil.getLogicPagination(systemEnrollVOList, pageSize));
+        }
+        return pagination;
+    }
+
+    @Override
+    public void updateCandidateEnroll(Enroll enroll) {
+        enrollMapper.updateCandidateEnroll(enroll);
     }
 }

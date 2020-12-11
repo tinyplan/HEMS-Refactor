@@ -23,9 +23,53 @@
         WHERE enroll_id = #{enrollId}
     </update>
 
+    <update id="updateCandidateEnroll">
+        UPDATE enroll
+        <set>
+            <if test="realName != null and realName != ''">
+                real_name = #{realName},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="contact != null and contact != ''">
+                contact = #{contact},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="eduBack != null and eduBack != ''">
+                edu_back = #{eduBack},
+            </if>
+            <if test="homeAddress != null and homeAddress != ''">
+                home_address = #{homeAddress},
+            </if>
+        </set>
+        WHERE enroll_id = #{enrollId}
+    </update>
+
     <select id="getLivedEnrollByCandidateId" resultType="com.tinyplan.exam.entity.po.Enroll">
         SELECT <include refid="enrollColumn"/>
         FROM enroll
         WHERE candidate_id = #{candidateId} AND status != -1 AND status != 2
+    </select>
+
+    <select id="getEnrollByCondition" resultType="com.tinyplan.exam.entity.po.Enroll">
+        SELECT <include refid="enrollColumn"/>
+        FROM enroll
+        <where>
+            <if test="realName != null and realName != ''">
+                real_name LIKE concat('%', #{realName}, '%')
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="enrollingList != null and enrollingList.size() > 0">
+                AND exam_no IN
+                <foreach collection="enrollingList" item="exam" open="(" close=")" separator=",">
+                    #{exam.examNo}
+                </foreach>
+            </if>
+        </where>
     </select>
 </mapper>

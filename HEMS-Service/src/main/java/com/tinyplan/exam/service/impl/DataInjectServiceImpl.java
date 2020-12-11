@@ -1,16 +1,11 @@
 package com.tinyplan.exam.service.impl;
 
 import com.tinyplan.exam.common.utils.type.StatusUtil;
-import com.tinyplan.exam.entity.form.AddExamInfoForm;
-import com.tinyplan.exam.entity.form.EnrollApplyForm;
-import com.tinyplan.exam.entity.form.RegisterForm;
-import com.tinyplan.exam.entity.form.UpdateUserDetailForm;
-import com.tinyplan.exam.entity.po.CandidateDetail;
-import com.tinyplan.exam.entity.po.EnrollApply;
-import com.tinyplan.exam.entity.po.ExamDetail;
-import com.tinyplan.exam.entity.po.User;
+import com.tinyplan.exam.entity.form.*;
+import com.tinyplan.exam.entity.po.*;
 import com.tinyplan.exam.entity.pojo.type.ApplyStatus;
 import com.tinyplan.exam.entity.vo.ExamDetailVO;
+import com.tinyplan.exam.entity.vo.SystemEnrollVO;
 import com.tinyplan.exam.service.DataInjectService;
 import org.springframework.stereotype.Service;
 
@@ -92,5 +87,40 @@ public class DataInjectServiceImpl implements DataInjectService {
         apply.setDescription(form.getDescription());
         apply.setStatus(ApplyStatus.AUDIT.getCode());
         return apply;
+    }
+
+    @Override
+    public SystemEnrollVO injectSystemEnrollVO(Enroll enroll, ExamDetail examDetail) {
+        SystemEnrollVO result = new SystemEnrollVO();
+        result.setCandidateId(enroll.getCandidateId());
+        result.setRealName(enroll.getRealName());
+        result.setGender(enroll.getGender() == 1 ? "男" : "女");
+        result.setContact(enroll.getContact());
+        result.setEmail(enroll.getEmail());
+        result.setEduBack(enroll.getEduBack());
+        result.setHomeAddress(enroll.getHomeAddress());
+
+        result.setEnrollId(enroll.getEnrollId());
+        result.setExamName(examDetail.getExamName());
+        result.setLevel(StatusUtil.getExamLevel(examDetail.getLevel()).getDescription());
+        result.setStatus(StatusUtil.getEnrollStatus(enroll.getStatus()).getDescription());
+        return result;
+    }
+
+    @Override
+    public Enroll injectEnroll(UpdateCandidateEnrollForm form) {
+        Enroll enroll = new Enroll();
+        enroll.setEnrollId(form.getEnrollId());
+        enroll.setRealName(form.getRealName());
+        if ("男".equals(form.getGender())) {
+            enroll.setGender(1);
+        } else if ("女".equals(form.getGender())) {
+            enroll.setGender(0);
+        }
+        enroll.setContact(form.getConcat());
+        enroll.setEmail(form.getEmail());
+        enroll.setEduBack(form.getEduBack());
+        enroll.setHomeAddress(form.getHomeAddress());
+        return enroll;
     }
 }

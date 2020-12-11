@@ -1,14 +1,9 @@
 package com.tinyplan.exam.service;
 
-import com.tinyplan.exam.entity.form.AddExamInfoForm;
-import com.tinyplan.exam.entity.form.EnrollApplyForm;
-import com.tinyplan.exam.entity.form.RegisterForm;
-import com.tinyplan.exam.entity.form.UpdateUserDetailForm;
-import com.tinyplan.exam.entity.po.CandidateDetail;
-import com.tinyplan.exam.entity.po.EnrollApply;
-import com.tinyplan.exam.entity.po.ExamDetail;
-import com.tinyplan.exam.entity.po.User;
+import com.tinyplan.exam.entity.form.*;
+import com.tinyplan.exam.entity.po.*;
 import com.tinyplan.exam.entity.vo.ExamDetailVO;
+import com.tinyplan.exam.entity.vo.SystemEnrollVO;
 
 public interface DataInjectService {
 
@@ -23,5 +18,9 @@ public interface DataInjectService {
     ExamDetailVO injectExamDetailVO(ExamDetail examDetail);
 
     EnrollApply injectEnrollApply(EnrollApplyForm form);
+
+    SystemEnrollVO injectSystemEnrollVO(Enroll enroll, ExamDetail examDetail);
+
+    Enroll injectEnroll(UpdateCandidateEnrollForm form);
 
 }

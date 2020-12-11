@@ -4,6 +4,7 @@ import com.tinyplan.exam.common.utils.type.StatusUtil;
 import com.tinyplan.exam.entity.form.*;
 import com.tinyplan.exam.entity.po.*;
 import com.tinyplan.exam.entity.pojo.type.ApplyStatus;
+import com.tinyplan.exam.entity.vo.EnrollApplyVO;
 import com.tinyplan.exam.entity.vo.ExamDetailVO;
 import com.tinyplan.exam.entity.vo.SystemEnrollVO;
 import com.tinyplan.exam.service.DataInjectService;
@@ -122,5 +123,15 @@ public class DataInjectServiceImpl implements DataInjectService {
         enroll.setEduBack(form.getEduBack());
         enroll.setHomeAddress(form.getHomeAddress());
         return enroll;
+    }
+
+    @Override
+    public EnrollApplyVO injectEnrollApplyVO(EnrollApply enrollApply, CandidateDetail candidateDetail) {
+        EnrollApplyVO result = new EnrollApplyVO();
+        result.setApplyId(enrollApply.getApplyId());
+        result.setCandidateId(enrollApply.getCandidateId());
+        result.setDescription(enrollApply.getDescription());
+        result.setRealName(candidateDetail.getRealName());
+        return result;
     }
 }

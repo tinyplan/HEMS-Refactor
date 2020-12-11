@@ -16,8 +16,27 @@
         VALUES (#{applyId}, #{candidateId}, #{examNo}, #{description}, #{feedback}, #{status})
     </insert>
 
+    <update id="updateEnrollApply">
+        UPDATE enroll_apply
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="feedback != null and feedback != ''">
+                feedback = #{feedback},
+            </if>
+        </set>
+        WHERE apply_id = #{applyId}
+    </update>
+
     <select id="getMaxId" resultType="java.lang.Integer">
         SELECT MAX(id)
         FROM enroll_apply
+    </select>
+
+    <select id="getEnrollApplyByStatus" resultType="com.tinyplan.exam.entity.po.EnrollApply">
+        SELECT <include refid="enrollApplyColumn"/>
+        FROM enroll_apply
+        WHERE status = #{status}
     </select>
 </mapper>

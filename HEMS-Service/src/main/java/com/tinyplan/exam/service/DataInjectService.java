@@ -2,6 +2,7 @@ package com.tinyplan.exam.service;
 
 import com.tinyplan.exam.entity.form.*;
 import com.tinyplan.exam.entity.po.*;
+import com.tinyplan.exam.entity.vo.EnrollApplyVO;
 import com.tinyplan.exam.entity.vo.ExamDetailVO;
 import com.tinyplan.exam.entity.vo.SystemEnrollVO;
 
@@ -22,5 +23,7 @@ public interface DataInjectService {
     SystemEnrollVO injectSystemEnrollVO(Enroll enroll, ExamDetail examDetail);
 
     Enroll injectEnroll(UpdateCandidateEnrollForm form);
+
+    EnrollApplyVO injectEnrollApplyVO(EnrollApply enrollApply, CandidateDetail candidateDetail);
 
 }

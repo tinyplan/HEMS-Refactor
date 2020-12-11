@@ -4,13 +4,9 @@ import com.tinyplan.exam.common.utils.type.StatusUtil;
 import com.tinyplan.exam.entity.form.*;
 import com.tinyplan.exam.entity.po.*;
 import com.tinyplan.exam.entity.pojo.type.ApplyStatus;
-import com.tinyplan.exam.entity.vo.EnrollApplyVO;
-import com.tinyplan.exam.entity.vo.ExamDetailVO;
-import com.tinyplan.exam.entity.vo.SystemEnrollVO;
+import com.tinyplan.exam.entity.vo.*;
 import com.tinyplan.exam.service.DataInjectService;
 import org.springframework.stereotype.Service;
-
-import javax.crypto.spec.DESedeKeySpec;
 
 @Service
 public class DataInjectServiceImpl implements DataInjectService {
@@ -77,6 +73,7 @@ public class DataInjectServiceImpl implements DataInjectService {
         detailVO.setExamStart(examDetail.getExamStart());
         detailVO.setExamEnd(examDetail.getExamEnd());
         detailVO.setStatus(StatusUtil.getExamStatus(examDetail.getStatus()).getDescription());
+        detailVO.setInterval(examDetail.getInterval());
         return detailVO;
     }
 
@@ -133,5 +130,24 @@ public class DataInjectServiceImpl implements DataInjectService {
         result.setDescription(enrollApply.getDescription());
         result.setRealName(candidateDetail.getRealName());
         return result;
+    }
+
+    @Override
+    public PortalEnrollVO injectPortalEnrollVO(Enroll enroll, ExamDetail examDetail) {
+        PortalEnrollVO portalEnrollVO = new PortalEnrollVO();
+        PortalCandidateInfoVO candidateInfoVO = new PortalCandidateInfoVO();
+        candidateInfoVO.setId(enroll.getCandidateId());
+        candidateInfoVO.setRealName(enroll.getRealName());
+        candidateInfoVO.setCandidateNo(enroll.getEnrollId());
+        candidateInfoVO.setGender(enroll.getGender() == 1 ? "男": "女");
+        candidateInfoVO.setContact(enroll.getContact());
+        candidateInfoVO.setEmail(enroll.getEmail());
+        candidateInfoVO.setEduBack(enroll.getEduBack());
+        candidateInfoVO.setHomeAddress(enroll.getHomeAddress());
+        candidateInfoVO.setStatus(StatusUtil.getEnrollStatus(enroll.getStatus()).getDescription());
+        portalEnrollVO.setCandidateInfo(candidateInfoVO);
+
+        portalEnrollVO.setExamInfo(this.injectExamDetailVO(examDetail));
+        return portalEnrollVO;
     }
 }

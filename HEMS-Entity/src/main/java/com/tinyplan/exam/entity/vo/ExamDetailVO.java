@@ -8,6 +8,7 @@ public class ExamDetailVO {
     private String enrollEnd;
     private String examStart;
     private String examEnd;
+    private Integer interval;
     private String status;
 
     public ExamDetailVO() {}
@@ -74,5 +75,13 @@ public class ExamDetailVO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getInterval() {
+        return interval;
+    }
+
+    public void setInterval(Integer interval) {
+        this.interval = interval;
     }
 }

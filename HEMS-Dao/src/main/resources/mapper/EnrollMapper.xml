@@ -72,4 +72,16 @@
             </if>
         </where>
     </select>
+
+    <select id="getEnrollByCandidateId" resultType="com.tinyplan.exam.entity.po.Enroll">
+        SELECT <include refid="enrollColumn"/>
+        FROM enroll
+        WHERE candidate_id = #{candidateId}
+    </select>
+
+    <select id="getEnrollByCandidateIdAndEnrollId" resultType="com.tinyplan.exam.entity.po.Enroll">
+        SELECT <include refid="enrollColumn"/>
+        FROM enroll
+        WHERE candidate_id = #{candidateId} AND enroll_id = #{enrollId}
+    </select>
 </mapper>

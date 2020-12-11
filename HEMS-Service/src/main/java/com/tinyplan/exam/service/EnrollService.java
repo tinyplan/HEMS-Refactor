@@ -3,6 +3,7 @@ package com.tinyplan.exam.service;
 import com.tinyplan.exam.entity.po.CandidateDetail;
 import com.tinyplan.exam.entity.po.Enroll;
 import com.tinyplan.exam.entity.vo.Pagination;
+import com.tinyplan.exam.entity.vo.PortalEnrollVO;
 import com.tinyplan.exam.entity.vo.SystemEnrollVO;
 
 public interface EnrollService {
@@ -14,5 +15,9 @@ public interface EnrollService {
     Pagination<SystemEnrollVO> getEnrollForSystemByCondition(Integer pageSize, String type, String content);
 
     void updateCandidateEnroll(Enroll enroll);
+
+    Pagination<PortalEnrollVO> getEnrollForPortalWithPagination(Integer pageSize, String candidateId);
+
+    PortalEnrollVO getEnrollForPortal(String token, String enrollId);
 
 }

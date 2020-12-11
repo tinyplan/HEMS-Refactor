@@ -1,17 +1,21 @@
 package com.tinyplan.exam.portal.controller;
 
 import com.tinyplan.exam.common.annotation.Authorization;
+import com.tinyplan.exam.common.utils.RequestUtil;
 import com.tinyplan.exam.entity.form.EnrollApplyForm;
 import com.tinyplan.exam.entity.form.EnrollForm;
 import com.tinyplan.exam.entity.form.PayForm;
 import com.tinyplan.exam.entity.pojo.ApiResult;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
+import com.tinyplan.exam.entity.vo.Pagination;
+import com.tinyplan.exam.entity.vo.PortalEnrollVO;
 import com.tinyplan.exam.service.ApplyService;
 import com.tinyplan.exam.service.DataInjectService;
 import com.tinyplan.exam.service.EnrollService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,8 +56,25 @@ public class EnrollController {
     }
 
     @PostMapping("/apply")
+    @Authorization
     public ApiResult<Object> submitApply(@RequestBody EnrollApplyForm form){
         applyService.addEnrollApply(dataInjectService.injectEnrollApply(form));
         return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
+    }
+
+    @GetMapping("/pages")
+    @Authorization
+    public ApiResult<Pagination<PortalEnrollVO>> getEnroll(@RequestParam("pageSize") Integer pageSize,
+                                                           @RequestParam("candidateId") String candidateId){
+        return new ApiResult<>(ResultStatus.RES_SUCCESS,
+                enrollService.getEnrollForPortalWithPagination(pageSize, candidateId));
+    }
+
+    @GetMapping("")
+    @Authorization
+    public ApiResult<PortalEnrollVO> getEnroll(HttpServletRequest request,
+                                               @RequestParam("enrollId") String enrollId){
+        return new ApiResult<>(ResultStatus.RES_SUCCESS,
+                enrollService.getEnrollForPortal(RequestUtil.getToken(request), enrollId));
     }
 }

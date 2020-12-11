@@ -2,6 +2,7 @@ package com.tinyplan.exam.service.impl;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import com.tinyplan.exam.common.utils.JwtUtil;
 import com.tinyplan.exam.common.utils.PaginationUtil;
 import com.tinyplan.exam.common.utils.type.StatusUtil;
 import com.tinyplan.exam.dao.EnrollMapper;
@@ -12,10 +13,12 @@ import com.tinyplan.exam.entity.po.Enroll;
 import com.tinyplan.exam.entity.po.ExamDetail;
 import com.tinyplan.exam.entity.po.Score;
 import com.tinyplan.exam.entity.pojo.BusinessException;
+import com.tinyplan.exam.entity.pojo.JwtDataLoad;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
 import com.tinyplan.exam.entity.pojo.type.EnrollStatus;
 import com.tinyplan.exam.entity.pojo.type.ExamStatus;
 import com.tinyplan.exam.entity.vo.Pagination;
+import com.tinyplan.exam.entity.vo.PortalEnrollVO;
 import com.tinyplan.exam.entity.vo.SystemEnrollVO;
 import com.tinyplan.exam.service.DataInjectService;
 import com.tinyplan.exam.service.EnrollService;
@@ -171,5 +174,27 @@ public class EnrollServiceImpl implements EnrollService {
     @Override
     public void updateCandidateEnroll(Enroll enroll) {
         enrollMapper.updateCandidateEnroll(enroll);
+    }
+
+    @Override
+    public Pagination<PortalEnrollVO> getEnrollForPortalWithPagination(Integer pageSize, String candidateId) {
+        List<Enroll> enrollList = enrollMapper.getEnrollByCandidateId(candidateId);
+        List<PortalEnrollVO> dataList = new ArrayList<>(enrollList.size());
+        for (Enroll enroll : enrollList) {
+            dataList.add(
+                dataInjectService.injectPortalEnrollVO(enroll, examDetailMapper.getExamDetailByNo(enroll.getExamNo()))
+            );
+        }
+        Pagination<PortalEnrollVO> pagination = new Pagination<>();
+        pagination.setTotal(dataList.size());
+        pagination.setTableData(PaginationUtil.getLogicPagination(dataList, pageSize));
+        return pagination;
+    }
+
+    @Override
+    public PortalEnrollVO getEnrollForPortal(String token, String enrollId) {
+        JwtDataLoad dataLoad = new JwtDataLoad(JwtUtil.verify(token));
+        Enroll enroll = enrollMapper.getEnrollByCandidateIdAndEnrollId(dataLoad.getUserId(), enrollId);
+        return dataInjectService.injectPortalEnrollVO(enroll, examDetailMapper.getExamDetailByNo(enroll.getExamNo()));
     }
 }

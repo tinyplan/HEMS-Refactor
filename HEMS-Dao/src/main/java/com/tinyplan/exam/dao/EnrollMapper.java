@@ -33,4 +33,9 @@ public interface EnrollMapper {
                                       @Param("status") Integer status);
 
     Integer updateCandidateEnroll(Enroll enroll);
+
+    List<Enroll> getEnrollByCandidateId(@Param("candidateId") String candidateId);
+
+    Enroll getEnrollByCandidateIdAndEnrollId(@Param("candidateId") String candidateId,
+                                             @Param("enrollId") String enrollId);
 }

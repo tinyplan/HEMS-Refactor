@@ -41,6 +41,10 @@ public interface ExamDetailMapper {
      */
     Integer updateExamStatus(@Param("examNo") String examNo, @Param("status") Integer status);
 
+    Integer updateExamRemain(@Param("examNo") String examNo, @Param("remain") Integer remain);
+
+    Integer getExamRemain(@Param("examNo") String examNo);
+
     ExamDetail getExamDetailByNo(@Param("examNo") String examNo);
 
     List<ExamDetail> getExamDetailByStatus(@Param("status") Integer status);

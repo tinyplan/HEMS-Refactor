@@ -156,9 +156,9 @@ public class UserServiceImpl implements UserService {
     public void updateUserInfo(String token, String accountName, CandidateDetail newDetail) {
         JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
         User user = candidateMapper.getCandidateByUsername(load.getUserId());
-        if (user != null) {
+        /*if (user != null) {
             throw new BusinessException(ResultStatus.RES_INFO_EXISTED_ACCOUNT_NAME);
-        }
+        }*/
         newDetail.setId(load.getUserId());
         Integer result1 = candidateMapper.updateCandidateDetail(newDetail);
         Integer result2 = candidateMapper.updateAccountName(load.getUserId(), accountName);

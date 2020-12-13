@@ -55,6 +55,9 @@ public class EnrollController {
         return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
     }
 
+    /**
+     * 提交报名信息修改申请
+     */
     @PostMapping("/apply")
     @Authorization
     public ApiResult<Object> submitApply(@RequestBody EnrollApplyForm form){
@@ -62,6 +65,12 @@ public class EnrollController {
         return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
     }
 
+    /**
+     * 获取报名信息(分页)
+     *
+     * @param pageSize 页面容量
+     * @param candidateId 考生ID
+     */
     @GetMapping("/pages")
     @Authorization
     public ApiResult<Pagination<PortalEnrollVO>> getEnroll(@RequestParam("pageSize") Integer pageSize,
@@ -70,6 +79,12 @@ public class EnrollController {
                 enrollService.getEnrollForPortalWithPagination(pageSize, candidateId));
     }
 
+    /**
+     * 获取报名信息
+     *
+     * @param request 请求体
+     * @param enrollId 报名序号
+     */
     @GetMapping("")
     @Authorization
     public ApiResult<PortalEnrollVO> getEnroll(HttpServletRequest request,

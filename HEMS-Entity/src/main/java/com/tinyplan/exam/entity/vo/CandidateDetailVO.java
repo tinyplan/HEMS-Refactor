@@ -10,6 +10,7 @@ public class CandidateDetailVO implements DetailVO {
     private String id;
     private String accountName;
     private String realName;
+    private String idCard;
     private String gender;
     private String contact;
     private String email;
@@ -21,12 +22,22 @@ public class CandidateDetailVO implements DetailVO {
     public CandidateDetailVO(CandidateDetail detail) {
         this.id = detail.getId();
         this.realName = detail.getRealName();
+        this.idCard = detail.getIdCard();
         this.gender = detail.getGender() == 1 ? "男" : "女";
         this.contact = detail.getContact();
         this.email = detail.getEmail();
         this.eduBack = detail.getEduBack();
         this.homeAddress = detail.getHomeAddress();
         this.avatar = detail.getAvatar();
+    }
+
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
     }
 
     public String getId() {

@@ -4,6 +4,7 @@ public class PortalCandidateInfoVO {
     // 考生ID
     private String id;
     private String enrollId;
+    private String idCard;
     private String realName;
     private String candidateNo;
     private String gender;
@@ -14,6 +15,14 @@ public class PortalCandidateInfoVO {
     private String status;
 
     public PortalCandidateInfoVO() {}
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
 
     public String getEnrollId() {
         return enrollId;

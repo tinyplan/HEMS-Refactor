@@ -123,8 +123,8 @@ public class NewsServiceImpl implements NewsService {
     public Pagination<NewsVO> getAllNews(Integer pageSize) {
         List<NewsVO> newsVOList = imageService.handleNewsImage(newsMapper.getAllNews());
         Pagination<NewsVO> paginationData = new Pagination<>();
-        paginationData.setTotal(newsVOList.size());
         paginationData.setTableData(PaginationUtil.getLogicPagination(newsVOList, pageSize));
+        paginationData.setTotal(paginationData.getTableData().size());
         return paginationData;
     }
 

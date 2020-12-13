@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface ExamService {
 
-    Map<String, List<Exam>> getExam();
+    Map<String, List<List<Exam>>> getExam();
 
     Map<String, Object> getExamByLevel(Integer level);
 

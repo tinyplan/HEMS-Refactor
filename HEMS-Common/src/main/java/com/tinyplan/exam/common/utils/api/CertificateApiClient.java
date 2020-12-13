@@ -65,6 +65,7 @@ public class CertificateApiClient extends ApacheHttpClient {
      */
     public CertificateFront transFront(ApiResponse response) {
         String dataBody = new String(response.getBody() , SdkConstant.CLOUDAPI_ENCODING);
+        System.out.println(dataBody);
         if (response.getCode() != 200) {
             throw new BusinessException(ResultStatus.RES_API_CALL_FAILED);
         }

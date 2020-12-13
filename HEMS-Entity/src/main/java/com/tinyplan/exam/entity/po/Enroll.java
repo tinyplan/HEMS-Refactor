@@ -5,6 +5,7 @@ public class Enroll {
     private String examNo;
     private String candidateId;
     private String realName;
+    private String idCard;
     private Integer gender;
     private String contact;
     private String email;
@@ -13,6 +14,14 @@ public class Enroll {
     private Integer status;
 
     public Enroll() {}
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
 
     public String getEnrollId() {
         return enrollId;

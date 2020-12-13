@@ -36,6 +36,7 @@ public class DataInjectServiceImpl implements DataInjectService {
     public CandidateDetail injectCandidateDetail(UpdateUserDetailForm form) {
         CandidateDetail detail = new CandidateDetail();
         detail.setRealName(form.getRealName());
+        detail.setIdCard(form.getIdCard());
         detail.setGender("男".equals(form.getGender()) ? 1 : 0);
         detail.setContact(form.getContact());
         detail.setEmail(form.getEmail());
@@ -74,6 +75,7 @@ public class DataInjectServiceImpl implements DataInjectService {
         detailVO.setExamEnd(examDetail.getExamEnd());
         detailVO.setStatus(StatusUtil.getExamStatus(examDetail.getStatus()).getDescription());
         detailVO.setInterval(examDetail.getInterval());
+        detailVO.setFee(examDetail.getFee());
         return detailVO;
     }
 
@@ -136,8 +138,10 @@ public class DataInjectServiceImpl implements DataInjectService {
     public PortalEnrollVO injectPortalEnrollVO(Enroll enroll, ExamDetail examDetail) {
         PortalEnrollVO portalEnrollVO = new PortalEnrollVO();
         PortalCandidateInfoVO candidateInfoVO = new PortalCandidateInfoVO();
+        candidateInfoVO.setEnrollId(enroll.getEnrollId());
         candidateInfoVO.setId(enroll.getCandidateId());
         candidateInfoVO.setRealName(enroll.getRealName());
+        candidateInfoVO.setIdCard(enroll.getIdCard());
         candidateInfoVO.setCandidateNo(enroll.getEnrollId());
         candidateInfoVO.setGender(enroll.getGender() == 1 ? "男": "女");
         candidateInfoVO.setContact(enroll.getContact());

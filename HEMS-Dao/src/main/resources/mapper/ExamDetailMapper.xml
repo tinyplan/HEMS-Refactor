@@ -19,6 +19,12 @@
         WHERE exam_no = #{examNo}
     </update>
 
+    <update id="updateExamRemain">
+        UPDATE exam_detail
+        SET remain = #{remain}
+        WHERE exam_no = #{examNo}
+    </update>
+
     <select id="getMaxId" resultType="java.lang.Integer">
         SELECT max(id)
         FROM exam_detail
@@ -68,6 +74,12 @@
                 AND status = #{status}
             </if>
         </where>
+    </select>
+
+    <select id="getExamRemain" resultType="java.lang.Integer">
+        SELECT remain
+        FROM exam_detail
+        WHERE exam_no = #{examNo}
     </select>
 
     <insert id="insertExamDetail">

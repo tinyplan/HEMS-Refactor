@@ -47,7 +47,7 @@ public class EnrollServiceImpl implements EnrollService {
     /**
      * 考生报名
      *
-     * @param examId 报考的考试
+     * @param examId          报考的考试
      * @param candidateDetail 考生报考填写的详细信息
      * @return 此次报名生成的报名序列号
      */
@@ -107,7 +107,15 @@ public class EnrollServiceImpl implements EnrollService {
             enroll.setEnrollId(enrollId);
             enroll.setExamNo(examDetail.getExamNo());
             enroll.setStatus(EnrollStatus.WAITING_PAY.getCode());
+            // 添加报考信息
             enrollMapper.insertEnroll(enroll, candidateDetail);
+            // 考试剩余人数减1
+            Integer remain = examDetailMapper.getExamRemain(examNo);
+            // 再次检查人数是否已满
+            if (remain <= 0) {
+                throw new BusinessException(ResultStatus.RES_EXAM_CAPACITY_OVERFLOW);
+            }
+            examDetailMapper.updateExamRemain(examNo, remain - 1);
             return enrollId;
         } else {
             throw new BusinessException(ResultStatus.RES_ENROLL_HAVE_NOT_EXAM_QUALIFICATION);
@@ -182,7 +190,7 @@ public class EnrollServiceImpl implements EnrollService {
         List<PortalEnrollVO> dataList = new ArrayList<>(enrollList.size());
         for (Enroll enroll : enrollList) {
             dataList.add(
-                dataInjectService.injectPortalEnrollVO(enroll, examDetailMapper.getExamDetailByNo(enroll.getExamNo()))
+                    dataInjectService.injectPortalEnrollVO(enroll, examDetailMapper.getExamDetailByNo(enroll.getExamNo()))
             );
         }
         Pagination<PortalEnrollVO> pagination = new Pagination<>();

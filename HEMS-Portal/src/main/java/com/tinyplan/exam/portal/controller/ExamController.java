@@ -21,7 +21,7 @@ public class ExamController {
 
     @GetMapping("/exam")
     @Authorization
-    public ApiResult<Map<String, List<Exam>>> getExam(){
+    public ApiResult<Map<String, List<List<Exam>>>> getExam(){
         return new ApiResult<>(ResultStatus.RES_SUCCESS, examService.getExam());
     }
 

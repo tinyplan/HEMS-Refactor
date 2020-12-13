@@ -3,6 +3,7 @@ package com.tinyplan.exam.entity.po;
 public class CandidateDetail {
     private String id;
     private String realName;
+    private String idCard;
     private Integer gender;
     private String contact;
     private String email;
@@ -26,6 +27,14 @@ public class CandidateDetail {
 
     public void setRealName(String realName) {
         this.realName = realName;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
     }
 
     public Integer getGender() {

@@ -9,9 +9,18 @@ public class ExamDetailVO {
     private String examStart;
     private String examEnd;
     private Integer interval;
+    private Integer fee;
     private String status;
 
     public ExamDetailVO() {}
+
+    public Integer getFee() {
+        return fee;
+    }
+
+    public void setFee(Integer fee) {
+        this.fee = fee;
+    }
 
     public String getExamNo() {
         return examNo;

@@ -11,10 +11,10 @@
     </sql>
     <!-- 考生详细信息表 -->
     <sql id="rawCandidateDetailColumn">
-        candidate_id, real_name, gender, contact, email, edu_back, home_address, avatar
+        candidate_id, real_name, id_card, gender, contact, email, edu_back, home_address, avatar
     </sql>
     <sql id="candidateDetailColumn">
-        candidate_id AS id, real_name AS realName, gender, contact, email, edu_back AS eduBack, home_address AS homeAddress, avatar
+        candidate_id AS id, real_name AS realName, id_card AS idCard, gender, contact, email, edu_back AS eduBack, home_address AS homeAddress, avatar
     </sql>
 
     <update id="updateCandidateDetail">
@@ -23,7 +23,10 @@
             <if test="realName != null and realName != ''">
                 real_name = #{realName},
             </if>
-            <if test="gender != null'">
+            <if test="idCard != null and idCard != ''">
+                id_card = #{idCard},
+            </if>
+            <if test="gender != null">
                 gender = #{gender},
             </if>
             <if test="contact != null and contact != ''">
@@ -78,7 +81,7 @@
 
     <insert id="insertCandidateDetail">
         INSERT INTO candidate_detail (<include refid="rawCandidateDetailColumn"/>)
-        VALUES (#{id}, #{realName}, #{gender}, #{contact}, #{email}, #{eduBack}, #{homeAddress}, #{avatar})
+        VALUES (#{id}, #{realName}, #{idCard}, #{gender}, #{contact}, #{email}, #{eduBack}, #{homeAddress}, #{avatar})
     </insert>
 
     <select id="getCandidateDetail" resultType="com.tinyplan.exam.entity.po.CandidateDetail">

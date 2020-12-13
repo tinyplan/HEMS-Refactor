@@ -10,6 +10,7 @@ import com.tinyplan.exam.entity.po.Exam;
 import com.tinyplan.exam.entity.po.ExamDetail;
 import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
+import com.tinyplan.exam.entity.pojo.type.ExamLevel;
 import com.tinyplan.exam.entity.pojo.type.ExamStatus;
 import com.tinyplan.exam.entity.vo.ExamDetailVO;
 import com.tinyplan.exam.entity.vo.Pagination;
@@ -34,9 +35,13 @@ public class ExamServiceImpl implements ExamService {
     private ExamDetailMapper examDetailMapper;
 
     @Override
-    public Map<String, List<Exam>> getExam() {
-        Map<String, List<Exam>> map = new HashMap<>();
-        map.put("examInfo", examMapper.getExam());
+    public Map<String, List<List<Exam>>> getExam() {
+        Map<String, List<List<Exam>>> map = new HashMap<>();
+        List<List<Exam>> result = new ArrayList<>();
+        for (ExamLevel level : ExamLevel.values()) {
+            result.add(examMapper.getExamByLevel(level.getCode()));
+        }
+        map.put("examInfo", result);
         return map;
     }
 
@@ -76,6 +81,7 @@ public class ExamServiceImpl implements ExamService {
         detail.setStatus(ExamStatus.BEFORE_ENROLL.getCode());
         // 插入表中
         examDetailMapper.insertExamDetail(detail);
+        // TODO 设置4个定时任务
     }
 
     @Override

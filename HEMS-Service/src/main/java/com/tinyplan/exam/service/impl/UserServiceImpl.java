@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import com.tinyplan.exam.common.constant.RedisKey;
 import com.tinyplan.exam.common.properties.HEMSProperties;
 import com.tinyplan.exam.common.service.TokenService;
 import com.tinyplan.exam.common.utils.JwtUtil;
@@ -114,11 +115,15 @@ public class UserServiceImpl implements UserService {
         token.setToken(tokenService.generateToken(user.getId(), user.getRoleId()));
         // 准备详细信息
         DetailVO detail = handlerService.getUserDetail(user);
-        // 获取角色信息
         List<String> roleIdList = new ArrayList<>();
         roleIdList.add(user.getRoleId());
         detail.setRoles(roleMapper.getRolesByIds(roleIdList));
-        // 将用户信息存入redis
+        // 检查此用户是否重复登录(是, 则更新token)
+        tokenService.checkReLogin(user.getId());
+        // 设置缓存
+        // user:token:<userId> ===> <token>
+        tokenService.setValue(RedisKey.KEY_TOKEN + user.getId(), token.getToken());
+        // <token> ===> <userDetail>
         tokenService.setValue(token.getToken(), detail);
         return token;
     }
@@ -156,9 +161,9 @@ public class UserServiceImpl implements UserService {
     public void updateUserInfo(String token, String accountName, CandidateDetail newDetail) {
         JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
         User user = candidateMapper.getCandidateByUsername(load.getUserId());
-        /*if (user != null) {
-            throw new BusinessException(ResultStatus.RES_INFO_EXISTED_ACCOUNT_NAME);
-        }*/
+        if (user == null) {
+            throw new BusinessException(ResultStatus.RES_INFO_NOT_EXIST);
+        }
         newDetail.setId(load.getUserId());
         Integer result1 = candidateMapper.updateCandidateDetail(newDetail);
         Integer result2 = candidateMapper.updateAccountName(load.getUserId(), accountName);

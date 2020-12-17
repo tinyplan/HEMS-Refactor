@@ -12,6 +12,8 @@ public interface TokenService {
 
     boolean checkToken(String token);
 
+    boolean checkReLogin(String userId);
+
     void flushExpire(String key);
 
     void flushExpire(String key, long expire);

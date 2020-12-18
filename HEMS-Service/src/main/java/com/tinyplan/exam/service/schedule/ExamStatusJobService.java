@@ -1,11 +1,15 @@
 package com.tinyplan.exam.service.schedule;
 
 import com.tinyplan.exam.entity.dto.ExamDetailExecuteResult;
+import com.tinyplan.exam.entity.po.ExamDetail;
+import com.tinyplan.exam.entity.po.StatusJob;
 
 import java.util.List;
 
 public interface ExamStatusJobService {
 
     List<ExamDetailExecuteResult> executeJob();
+
+    Integer addJobs(ExamDetail examDetail);
 
 }

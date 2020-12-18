@@ -16,6 +16,7 @@ import com.tinyplan.exam.entity.vo.ExamDetailVO;
 import com.tinyplan.exam.entity.vo.Pagination;
 import com.tinyplan.exam.service.DataInjectService;
 import com.tinyplan.exam.service.ExamService;
+import com.tinyplan.exam.service.schedule.ExamStatusJobService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,9 @@ public class ExamServiceImpl implements ExamService {
 
     @Resource(name = "dataInjectServiceImpl")
     private DataInjectService dataInjectService;
+
+    @Resource(name = "examStatusJobServiceImpl")
+    private ExamStatusJobService examStatusJobService;
 
     @Resource(name = "examMapper")
     private ExamMapper examMapper;
@@ -82,6 +86,7 @@ public class ExamServiceImpl implements ExamService {
         // 插入表中
         examDetailMapper.insertExamDetail(detail);
         // TODO 设置4个定时任务
+        examStatusJobService.addJobs(detail);
     }
 
     @Override

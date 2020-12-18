@@ -7,16 +7,30 @@
         job_id AS jobId, exam_no AS examNo, execute_time AS executeTime, original_status AS originalStatus, update_status AS updateStatus, status
     </sql>
 
+    <sql id="rawExamStatusJobColumn">
+        job_id, exam_no, execute_time, original_status, update_status, status
+    </sql>
+
+    <insert id="insertJob">
+        INSERT INTO job_exam_status (<include refid="rawExamStatusJobColumn"/>)
+        VALUES (#{jobId}, #{examNo}, #{executeTime},  #{originalStatus}, #{updateStatus}, #{status})
+    </insert>
+
     <update id="updateJobStatus">
         UPDATE job_exam_status
         SET status = #{status}
         WHERE job_id = #{jobId}
     </update>
 
-    <select id="getJobByLivedStatus" resultType="com.tinyplan.exam.entity.po.StatusJob">
+    <select id="getJobByStatus" resultType="com.tinyplan.exam.entity.po.StatusJob">
         SELECT <include refid="examStatusJobColumn"/>
         FROM job_exam_status
-        WHERE status = 0
+        WHERE status = #{status}
+    </select>
+
+    <select id="getMaxId" resultType="java.lang.Integer">
+        SELECT max(id)
+        FROM job_exam_status
     </select>
 
 </mapper>

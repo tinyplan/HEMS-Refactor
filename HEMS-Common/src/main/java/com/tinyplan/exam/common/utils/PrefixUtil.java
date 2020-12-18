@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 用户ID 前缀
+ * ID 前缀
  */
 public class PrefixUtil {
     public static final String ID_SEPARATOR = "_";
@@ -21,9 +21,11 @@ public class PrefixUtil {
         USER_PREFIX_MAP.put(UserType.INVIGILATOR, "inv");
         USER_PREFIX_MAP.put(UserType.SYSTEM_ADMIN, "adm");
         USER_PREFIX_MAP.put(UserType.EDU_ADMIN, "edu");
+
         OBJECT_PREFIX_MAP = new HashMap<>();
         OBJECT_PREFIX_MAP.put(ObjectType.NEWS, "news");
         OBJECT_PREFIX_MAP.put(ObjectType.ENROLL_APPLY, "ea");
+        OBJECT_PREFIX_MAP.put(ObjectType.SCHEDULE_JOB, "job");
     }
 
     public static String getUserPrefix(UserType type) {

@@ -28,7 +28,7 @@
         WHERE exam_no = #{job.examNo} AND execute_time = #{oldTime} AND original_status = #{job.originalStatus}
     </update>
 
-    <select id="getJobByStatus" resultType="com.tinyplan.exam.entity.po.StatusJob">
+    <select id="getJobByStatus" resultType="com.tinyplan.exam.entity.po.ExamStatusJobInfo">
         SELECT <include refid="examStatusJobColumn"/>
         FROM job_exam_status
         WHERE status = #{status}

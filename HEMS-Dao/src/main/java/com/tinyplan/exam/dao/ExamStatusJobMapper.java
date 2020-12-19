@@ -1,6 +1,6 @@
 package com.tinyplan.exam.dao;
 
-import com.tinyplan.exam.entity.po.StatusJob;
+import com.tinyplan.exam.entity.po.ExamStatusJobInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +16,7 @@ public interface ExamStatusJobMapper {
      *
      * @param status 任务状态 {@link com.tinyplan.exam.entity.pojo.type.JobExecuteStatus}
      */
-    List<StatusJob> getJobByStatus(@Param("status") Integer status);
+    List<ExamStatusJobInfo> getJobByStatus(@Param("status") Integer status);
 
     /**
      * 更新任务状态
@@ -29,10 +29,10 @@ public interface ExamStatusJobMapper {
     /**
      * 插入一个任务
      *
-     * @param statusJob 任务
+     * @param examStatusJobInfo 任务
      */
-    Integer insertJob(StatusJob statusJob);
+    Integer insertJob(ExamStatusJobInfo examStatusJobInfo);
 
-    Integer updateJobExecuteTime(@Param("job") StatusJob job, @Param("oldTime") String oldTime);
+    Integer updateJobExecuteTime(@Param("job") ExamStatusJobInfo job, @Param("oldTime") String oldTime);
 
 }

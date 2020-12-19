@@ -1,5 +1,6 @@
 package com.tinyplan.exam.common.aop;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.tinyplan.exam.entity.pojo.ApiResult;
 import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
@@ -22,7 +23,11 @@ public class GlobalExceptionResolver {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public ApiResult<Object> handleException(Exception e){
-        LOGGER.error(e.getMessage());
+        if (e instanceof TokenExpiredException) {
+            LOGGER.error(ResultStatus.RES_ILLEGAL_REQUEST.getMessage());
+            return new ApiResult<>(ResultStatus.RES_ILLEGAL_REQUEST, null);
+        }
+        e.printStackTrace();
         return new ApiResult<>(ResultStatus.RES_UNKNOWN_ERROR, null);
     }
 

@@ -106,6 +106,7 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
+    @Transactional
     public void updateExamStatus(String examNo, Integer status) {
         ExamDetail examDetail = examDetailMapper.getExamDetailByNo(examNo);
         // 考试状态只能向后改动, 且只能改动一位
@@ -128,6 +129,7 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
+    @Transactional
     public void updateExamSession(String examNo, String examStart, String examEnd) {
         ExamDetail examDetail = examDetailMapper.getExamDetailByNo(examNo);
         if (examDetail == null) {

@@ -18,14 +18,9 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
     @Resource(name = "tokenServiceImpl")
     private TokenService tokenService;
 
-    @Resource(name = "hemsProperties")
-    private HEMSProperties hemsProperties;
-
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
-        if (!hemsProperties.isDebug()) {
-            registry.addInterceptor(new AuthorizationInterceptor(tokenService)).addPathPatterns("/**");
-        }
+        registry.addInterceptor(new AuthorizationInterceptor(tokenService)).addPathPatterns("/**");
         super.addInterceptors(registry);
     }
 }

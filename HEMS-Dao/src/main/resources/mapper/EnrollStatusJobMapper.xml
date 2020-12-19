@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tinyplan.exam.dao.EnrollStatusJobMapper">
+
+    <sql id="enrollStatusJobColumn">
+        job_id AS jobId, enroll_id AS enrollId, execute_time AS executeTime, original_status AS originalStatus, update_status AS updateStatus, status
+    </sql>
+
+    <sql id="rawEnrollStatusJobColumn">
+        job_id, enroll_id, execute_time, original_status, update_status, status
+    </sql>
+
+    <insert id="insertJob">
+        INSERT INTO job_enroll_status (<include refid="rawEnrollStatusJobColumn"/>)
+        VALUES (#{jobId}, #{enrollId}, #{executeTime}, #{originalStatus}, #{updateStatus}, #{status})
+    </insert>
+
+    <update id="updateJobStatus">
+        UPDATE job_enroll_status
+        SET status = #{status}
+        WHERE job_id = #{jobId}
+    </update>
+
+    <select id="getJobByStatus" resultType="com.tinyplan.exam.entity.po.EnrollStatusJobInfo">
+        SELECT <include refid="enrollStatusJobColumn"/>
+        FROM job_enroll_status
+        WHERE status = #{status}
+    </select>
+
+    <select id="getMaxId" resultType="java.lang.Integer">
+        SELECT max(id)
+        FROM job_enroll_status
+    </select>
+</mapper>

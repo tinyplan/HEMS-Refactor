@@ -84,4 +84,10 @@
         FROM enroll
         WHERE candidate_id = #{candidateId} AND enroll_id = #{enrollId}
     </select>
+
+    <select id="getEnrollById" resultType="com.tinyplan.exam.entity.po.Enroll">
+        SELECT <include refid="enrollColumn"/>
+        FROM enroll
+        WHERE enroll_id = #{enrollId}
+    </select>
 </mapper>

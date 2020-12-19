@@ -1,6 +1,6 @@
 package com.tinyplan.exam.entity.po;
 
-public class StatusJob {
+public class ExamStatusJobInfo {
     private String jobId;
     private String examNo;
     // 执行任务开始的时间
@@ -12,9 +12,9 @@ public class StatusJob {
     // 任务执行的状态
     private Integer status;
 
-    public StatusJob() {}
+    public ExamStatusJobInfo() {}
 
-    public StatusJob(Integer status) {
+    public ExamStatusJobInfo(Integer status) {
         this.status = status;
     }
 

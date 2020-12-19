@@ -38,4 +38,6 @@ public interface EnrollMapper {
 
     Enroll getEnrollByCandidateIdAndEnrollId(@Param("candidateId") String candidateId,
                                              @Param("enrollId") String enrollId);
+
+    Enroll getEnrollById(@Param("enrollId") String enrollId);
 }

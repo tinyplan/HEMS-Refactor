@@ -9,7 +9,7 @@ import com.tinyplan.exam.dao.ExamStatusJobMapper;
 import com.tinyplan.exam.entity.dto.ExamDetailExecuteResult;
 import com.tinyplan.exam.entity.dto.UpdateJobOrder;
 import com.tinyplan.exam.entity.po.ExamDetail;
-import com.tinyplan.exam.entity.po.StatusJob;
+import com.tinyplan.exam.entity.po.ExamStatusJobInfo;
 import com.tinyplan.exam.entity.pojo.type.ExamStatus;
 import com.tinyplan.exam.entity.pojo.type.JobExecuteStatus;
 import com.tinyplan.exam.entity.pojo.type.ObjectType;
@@ -46,34 +46,31 @@ public class ExamStatusJobServiceImpl implements ExamStatusJobService {
     @Transactional
     public List<ExamDetailExecuteResult> executeJob() {
         // 查询未执行的任务
-        List<StatusJob> livedJobList = examStatusJobMapper.getJobByStatus(JobExecuteStatus.NOT_EXECUTE.getCode());
+        List<ExamStatusJobInfo> livedJobList = examStatusJobMapper.getJobByStatus(JobExecuteStatus.NOT_EXECUTE.getCode());
         List<ExamDetailExecuteResult> result = new ArrayList<>(livedJobList.size());
         // 查询对应的考试详细信息
-        for (StatusJob job : livedJobList) {
-            ExamDetailExecuteResult executeResult = new ExamDetailExecuteResult();
-            executeResult.setJobId(job.getJobId());
-            executeResult.setOriginalStatus(job.getOriginalStatus());
-            executeResult.setUpdateStatus(job.getUpdateStatus());
+        for (ExamStatusJobInfo job : livedJobList) {
             ExamDetail examDetail = examDetailMapper.getExamDetailByNo(job.getExamNo());
-            executeResult.setExamNo(examDetail.getExamNo());
-            executeResult.setExamName(examDetail.getExamName());
             // 比较考试当前状态和任务中记录的原始状态
             if (examDetail.getStatus() > job.getOriginalStatus()) {
+                ExamDetailExecuteResult executeResult = new ExamDetailExecuteResult(examDetail, job);
                 // 标记任务过期
                 examStatusJobMapper.updateJobStatus(job.getJobId(), JobExecuteStatus.CANCEL.getCode());
                 executeResult.setExecuteResult("任务过期");
+                result.add(executeResult);
             } else if (examDetail.getStatus().equals(job.getOriginalStatus())){
                 // 只有当任务标明的初始状态与考试当前的状态相同时, 才会执行任务
                 Date executeTime = DateUtil.parse(job.getExecuteTime(), "yyyy-MM-dd HH:mm");
                 if (DateUtil.between(executeTime, new Date(), DateUnit.MINUTE, false) >= 0){
+                    ExamDetailExecuteResult executeResult = new ExamDetailExecuteResult(examDetail, job);
                     // 更新考试状态
                     examDetailMapper.updateExamStatus(job.getExamNo(), job.getUpdateStatus());
                     // 标记任务已经完成
                     examStatusJobMapper.updateJobStatus(job.getJobId(), JobExecuteStatus.EXECUTE.getCode());
                     executeResult.setExecuteResult("任务完成");
+                    result.add(executeResult);
                 }
             }
-            result.add(executeResult);
         }
         return result;
     }
@@ -81,54 +78,54 @@ public class ExamStatusJobServiceImpl implements ExamStatusJobService {
     @Override
     @Transactional
     public Integer addJobs(ExamDetail examDetail) {
-        StatusJob job = new StatusJob(JobExecuteStatus.NOT_EXECUTE.getCode());
-        String prefix = PrefixUtil.getObjectPrefix(ObjectType.SCHEDULE_JOB);
+        ExamStatusJobInfo job = new ExamStatusJobInfo(JobExecuteStatus.NOT_EXECUTE.getCode());
+        String prefix = PrefixUtil.getObjectPrefix(ObjectType.EXAM_JOB);
         String date = DateUtil.format(new Date(), "yyyyMMdd");
 
-        String maxId = String.valueOf(CommonUtil.checkMaxId(examStatusJobMapper.getMaxId() + 1));
+        String maxId = String.valueOf(CommonUtil.checkMaxId(examStatusJobMapper.getMaxId()) + 1);
         job.setJobId(PrefixUtil.generateId(prefix, date, maxId));
         job.setExamNo(examDetail.getExamNo());
         job.setExecuteTime(examDetail.getEnrollStart());
         job.setOriginalStatus(ExamStatus.BEFORE_ENROLL.getCode());
         job.setUpdateStatus(ExamStatus.DURING_ENROLL.getCode());
-        examStatusJobMapper.insertJob(job);
+        Integer result = examStatusJobMapper.insertJob(job);
 
-        maxId = String.valueOf(CommonUtil.checkMaxId(examStatusJobMapper.getMaxId() + 1));
+        maxId = String.valueOf(CommonUtil.checkMaxId(examStatusJobMapper.getMaxId()) + 1);
         job.setJobId(PrefixUtil.generateId(prefix, date, maxId));
         job.setExecuteTime(examDetail.getEnrollEnd());
         job.setOriginalStatus(ExamStatus.DURING_ENROLL.getCode());
         job.setUpdateStatus(ExamStatus.ARRANGING.getCode());
-        examStatusJobMapper.insertJob(job);
+        result += examStatusJobMapper.insertJob(job);
 
-        maxId = String.valueOf(CommonUtil.checkMaxId(examStatusJobMapper.getMaxId() + 1));
+        maxId = String.valueOf(CommonUtil.checkMaxId(examStatusJobMapper.getMaxId()) + 1);
         job.setJobId(PrefixUtil.generateId(prefix, date, maxId));
         job.setExecuteTime(examDetail.getExamStart());
         job.setOriginalStatus(ExamStatus.BEFORE_EXAM.getCode());
         job.setUpdateStatus(ExamStatus.DURING_EXAM.getCode());
-        examStatusJobMapper.insertJob(job);
+        result += examStatusJobMapper.insertJob(job);
 
-        maxId = String.valueOf(CommonUtil.checkMaxId(examStatusJobMapper.getMaxId() + 1));
+        maxId = String.valueOf(CommonUtil.checkMaxId(examStatusJobMapper.getMaxId()) + 1);
         job.setJobId(PrefixUtil.generateId(prefix, date, maxId));
         job.setExecuteTime(examDetail.getExamEnd());
         job.setOriginalStatus(ExamStatus.DURING_EXAM.getCode());
         job.setUpdateStatus(ExamStatus.DURING_CHECK.getCode());
-        examStatusJobMapper.insertJob(job);
+        result += examStatusJobMapper.insertJob(job);
 
-        return 4;
+        return result;
     }
 
     @Override
     @Transactional
     public Integer updateJob(UpdateJobOrder order) {
         // 修改考试开始的任务
-        StatusJob job1 = new StatusJob();
+        ExamStatusJobInfo job1 = new ExamStatusJobInfo();
         job1.setExamNo(order.getExamNo());
         job1.setExecuteTime(order.getNewExamStart());
         job1.setOriginalStatus(ExamStatus.BEFORE_EXAM.getCode());
         Integer result = examStatusJobMapper.updateJobExecuteTime(job1, order.getOldExamStart());
 
         // 修改考试开始的任务
-        StatusJob job2 = new StatusJob();
+        ExamStatusJobInfo job2 = new ExamStatusJobInfo();
         job2.setExamNo(order.getExamNo());
         job2.setExecuteTime(order.getNewExamEnd());
         job2.setOriginalStatus(ExamStatus.DURING_EXAM.getCode());

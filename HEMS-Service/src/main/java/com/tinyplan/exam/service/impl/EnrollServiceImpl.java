@@ -22,6 +22,7 @@ import com.tinyplan.exam.entity.vo.PortalEnrollVO;
 import com.tinyplan.exam.entity.vo.SystemEnrollVO;
 import com.tinyplan.exam.service.DataInjectService;
 import com.tinyplan.exam.service.EnrollService;
+import com.tinyplan.exam.service.schedule.EnrollStatusJobService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -34,6 +35,9 @@ public class EnrollServiceImpl implements EnrollService {
 
     @Resource(name = "dataInjectServiceImpl")
     private DataInjectService dataInjectService;
+
+    @Resource(name = "enrollStatusJobServiceImpl")
+    private EnrollStatusJobService enrollStatusJobService;
 
     @Resource(name = "examDetailMapper")
     private ExamDetailMapper examDetailMapper;
@@ -116,6 +120,7 @@ public class EnrollServiceImpl implements EnrollService {
                 throw new BusinessException(ResultStatus.RES_EXAM_CAPACITY_OVERFLOW);
             }
             examDetailMapper.updateExamRemain(examNo, remain - 1);
+            enrollStatusJobService.addJobs(enroll.getEnrollId());
             return enrollId;
         } else {
             throw new BusinessException(ResultStatus.RES_ENROLL_HAVE_NOT_EXAM_QUALIFICATION);

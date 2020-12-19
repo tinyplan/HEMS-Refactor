@@ -3,7 +3,6 @@ package com.tinyplan.exam.service.schedule;
 import com.tinyplan.exam.entity.dto.ExamDetailExecuteResult;
 import com.tinyplan.exam.entity.dto.UpdateJobOrder;
 import com.tinyplan.exam.entity.po.ExamDetail;
-import com.tinyplan.exam.entity.po.StatusJob;
 
 import java.util.List;
 

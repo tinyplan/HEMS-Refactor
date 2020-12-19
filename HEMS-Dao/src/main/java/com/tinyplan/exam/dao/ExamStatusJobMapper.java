@@ -33,4 +33,6 @@ public interface ExamStatusJobMapper {
      */
     Integer insertJob(StatusJob statusJob);
 
+    Integer updateJobExecuteTime(@Param("job") StatusJob job, @Param("oldTime") String oldTime);
+
 }

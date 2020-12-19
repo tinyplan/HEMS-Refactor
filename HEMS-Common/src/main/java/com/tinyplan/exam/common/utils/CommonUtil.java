@@ -1,5 +1,10 @@
 package com.tinyplan.exam.common.utils;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
+
+import java.util.Date;
+
 public class CommonUtil {
 
     /**
@@ -10,6 +15,10 @@ public class CommonUtil {
      */
     public static Integer checkMaxId(Integer maxId){
         return maxId == null ? 0 : maxId;
+    }
+
+    public static boolean later(Date begin, Date end) {
+        return DateUtil.between(begin, end, DateUnit.MINUTE, false) > 0;
     }
 
 }

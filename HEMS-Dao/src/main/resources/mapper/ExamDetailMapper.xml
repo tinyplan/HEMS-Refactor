@@ -25,6 +25,22 @@
         WHERE exam_no = #{examNo}
     </update>
 
+    <update id="updateExamDetail">
+        UPDATE exam_detail
+        <set>
+            <if test="examStart != null and examStart != ''">
+                exam_start = #{examStart},
+            </if>
+            <if test="examEnd != null and examEnd != ''">
+                exam_end = #{examEnd},
+            </if>
+            <if test="interval != null">
+                `interval` = #{interval}
+            </if>
+        </set>
+        WHERE exam_no = #{examNo}
+    </update>
+
     <select id="getMaxId" resultType="java.lang.Integer">
         SELECT max(id)
         FROM exam_detail
@@ -80,6 +96,12 @@
         SELECT remain
         FROM exam_detail
         WHERE exam_no = #{examNo}
+    </select>
+
+    <select id="getExamDetailBeforeQueryStatus" resultType="com.tinyplan.exam.entity.po.ExamDetail">
+        SELECT <include refid="examDetailColumn"/>
+        FROM exam_detail
+        WHERE status &lt; #{status}
     </select>
 
     <insert id="insertExamDetail">

@@ -7,6 +7,7 @@ import com.tinyplan.exam.common.utils.PrefixUtil;
 import com.tinyplan.exam.dao.ExamDetailMapper;
 import com.tinyplan.exam.dao.ExamStatusJobMapper;
 import com.tinyplan.exam.entity.dto.ExamDetailExecuteResult;
+import com.tinyplan.exam.entity.dto.UpdateJobOrder;
 import com.tinyplan.exam.entity.po.ExamDetail;
 import com.tinyplan.exam.entity.po.StatusJob;
 import com.tinyplan.exam.entity.pojo.type.ExamStatus;
@@ -114,5 +115,24 @@ public class ExamStatusJobServiceImpl implements ExamStatusJobService {
         examStatusJobMapper.insertJob(job);
 
         return 4;
+    }
+
+    @Override
+    @Transactional
+    public Integer updateJob(UpdateJobOrder order) {
+        // 修改考试开始的任务
+        StatusJob job1 = new StatusJob();
+        job1.setExamNo(order.getExamNo());
+        job1.setExecuteTime(order.getNewExamStart());
+        job1.setOriginalStatus(ExamStatus.BEFORE_EXAM.getCode());
+        Integer result = examStatusJobMapper.updateJobExecuteTime(job1, order.getOldExamStart());
+
+        // 修改考试开始的任务
+        StatusJob job2 = new StatusJob();
+        job2.setExamNo(order.getExamNo());
+        job2.setExecuteTime(order.getNewExamEnd());
+        job2.setOriginalStatus(ExamStatus.DURING_EXAM.getCode());
+        result += examStatusJobMapper.updateJobExecuteTime(job2, order.getOldExamEnd());
+        return result;
     }
 }

@@ -6,6 +6,7 @@ import com.tinyplan.exam.common.utils.CommonUtil;
 import com.tinyplan.exam.common.utils.PaginationUtil;
 import com.tinyplan.exam.dao.ExamDetailMapper;
 import com.tinyplan.exam.dao.ExamMapper;
+import com.tinyplan.exam.entity.dto.UpdateJobOrder;
 import com.tinyplan.exam.entity.po.Exam;
 import com.tinyplan.exam.entity.po.ExamDetail;
 import com.tinyplan.exam.entity.pojo.BusinessException;
@@ -13,6 +14,7 @@ import com.tinyplan.exam.entity.pojo.ResultStatus;
 import com.tinyplan.exam.entity.pojo.type.ExamLevel;
 import com.tinyplan.exam.entity.pojo.type.ExamStatus;
 import com.tinyplan.exam.entity.vo.ExamDetailVO;
+import com.tinyplan.exam.entity.vo.ExamSessionVO;
 import com.tinyplan.exam.entity.vo.Pagination;
 import com.tinyplan.exam.service.DataInjectService;
 import com.tinyplan.exam.service.ExamService;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
+import static com.tinyplan.exam.common.utils.CommonUtil.later;
 
 @Service
 public class ExamServiceImpl implements ExamService {
@@ -110,6 +113,49 @@ public class ExamServiceImpl implements ExamService {
             examDetailMapper.updateExamStatus(examNo, status);
         } else {
             throw new BusinessException(ResultStatus.RES_UPDATE_ILLEGAL_EXAM_STATUS);
+        }
+    }
+
+    @Override
+    public List<ExamSessionVO> getAllExamSession() {
+        List<ExamDetail> examDetailList =
+                examDetailMapper.getExamDetailBeforeQueryStatus(ExamStatus.BEFORE_EXAM.getCode());
+        List<ExamSessionVO> sessionVOList = new ArrayList<>(examDetailList.size());
+        for (ExamDetail examDetail : examDetailList) {
+            sessionVOList.add(dataInjectService.injectExamSession(examDetail));
+        }
+        return sessionVOList;
+    }
+
+    @Override
+    public void updateExamSession(String examNo, String examStart, String examEnd) {
+        ExamDetail examDetail = examDetailMapper.getExamDetailByNo(examNo);
+        if (examDetail == null) {
+            throw new BusinessException(ResultStatus.RES_NOT_EXIST_EXAM);
+        }
+        if (examDetail.getStatus() >= ExamStatus.BEFORE_EXAM.getCode()) {
+            throw new BusinessException(ResultStatus.RES_UPDATE_EXAM_FAIL);
+        }
+        Date enrollEnd = DateUtil.parse(examDetail.getEnrollEnd());
+        Date examStartDate = DateUtil.parse(examStart);
+        Date examEndDate = DateUtil.parse(examEnd);
+        if (!(later(new Date(), examStartDate) && later(enrollEnd, examStartDate) && later(examStartDate, examEndDate))) {
+            throw new BusinessException(ResultStatus.RES_INVALID_PARAM);
+        }
+        int interval = (int) DateUtil.between(examStartDate, examEndDate, DateUnit.MINUTE, false);
+
+        ExamDetail newDetail = new ExamDetail();
+        newDetail.setExamNo(examNo);
+        newDetail.setExamStart(examStart);
+        newDetail.setExamEnd(examEnd);
+        newDetail.setInterval(interval);
+        // 更新考试信息
+        Integer result = examDetailMapper.updateExamDetail(newDetail);
+        // 更新定时任务执行的时间
+        result += examStatusJobService.updateJob(
+                new UpdateJobOrder(examNo, examDetail.getExamStart(), examStart, examDetail.getExamEnd(), examEnd));
+        if (result != 3) {
+            throw new BusinessException(ResultStatus.RES_UNKNOWN_ERROR);
         }
     }
 }

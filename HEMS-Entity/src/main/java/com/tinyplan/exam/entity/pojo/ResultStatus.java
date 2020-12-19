@@ -37,7 +37,9 @@ public enum ResultStatus {
     RES_ENROLL_SAME_EXAM(20043, "不能报考相同的考试"),
     RES_ENROLL_TIME_CONFLICT(20044, "考试时间冲突"),
     // 修改考试状态
-    RES_UPDATE_ILLEGAL_EXAM_STATUS(20046, "修改考试状态非法"),
+    RES_NOT_EXIST_EXAM(20046, "不存在的考试"),
+    RES_UPDATE_ILLEGAL_EXAM_STATUS(20047, "修改考试状态非法"),
+    RES_UPDATE_EXAM_FAIL(20048, "无法修改考试场次"),
 
     RES_ILLEGAL_REQUEST(40003, "非法请求"),
     RES_UNKNOWN_ERROR(50000, "未知异常"),

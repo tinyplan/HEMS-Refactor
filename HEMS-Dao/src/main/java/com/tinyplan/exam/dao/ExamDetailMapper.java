@@ -53,4 +53,13 @@ public interface ExamDetailMapper {
                                               @Param("level") Integer level,
                                               @Param("status") Integer status);
 
+    /**
+     * 查询此状态之前的考试详细信息
+     *
+     * @param status 要查询的状态
+     */
+    List<ExamDetail> getExamDetailBeforeQueryStatus(@Param("status") Integer status);
+
+    Integer updateExamDetail(ExamDetail examDetail);
+
 }

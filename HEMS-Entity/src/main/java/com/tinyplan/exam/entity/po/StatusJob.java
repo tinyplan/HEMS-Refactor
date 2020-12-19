@@ -12,6 +12,8 @@ public class StatusJob {
     // 任务执行的状态
     private Integer status;
 
+    public StatusJob() {}
+
     public StatusJob(Integer status) {
         this.status = status;
     }

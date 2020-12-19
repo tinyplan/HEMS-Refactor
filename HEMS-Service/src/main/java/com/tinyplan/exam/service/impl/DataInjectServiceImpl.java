@@ -154,4 +154,21 @@ public class DataInjectServiceImpl implements DataInjectService {
         portalEnrollVO.setExamInfo(this.injectExamDetailVO(examDetail));
         return portalEnrollVO;
     }
+
+    @Override
+    public ExamSessionVO injectExamSession(ExamDetail examDetail) {
+        ExamSessionVO sessionVO = new ExamSessionVO();
+        sessionVO.setExamNo(examDetail.getExamNo());
+        sessionVO.setExamName(
+                StatusUtil.getExamLevel(examDetail.getLevel()).getDescription() + examDetail.getExamName());
+        sessionVO.setInterval(examDetail.getInterval());
+        sessionVO.setStatus(StatusUtil.getExamStatus(examDetail.getStatus()).getDescription());
+
+        String[] tmp1 = examDetail.getExamStart().split(" ");
+        String[] tmp2 = examDetail.getExamEnd().split(" ");
+        sessionVO.setExamDate(tmp1[0]);
+        sessionVO.setExamStart(tmp1[1]);
+        sessionVO.setExamEnd(tmp2[1]);
+        return sessionVO;
+    }
 }

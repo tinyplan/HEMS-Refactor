@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.tinyplan.exam.common.utils.CommonUtil.later;
+
 @Service
 public class ValidatorServiceImpl implements ValidatorService {
 
@@ -43,10 +45,6 @@ public class ValidatorServiceImpl implements ValidatorService {
             valid = false;
         }
         return valid;
-    }
-
-    private boolean later(Date begin, Date end) {
-        return DateUtil.between(begin, end, DateUnit.MINUTE, false) > 0;
     }
 }
 

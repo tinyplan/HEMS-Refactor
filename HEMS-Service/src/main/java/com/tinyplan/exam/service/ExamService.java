@@ -3,6 +3,7 @@ package com.tinyplan.exam.service;
 import com.tinyplan.exam.entity.po.Exam;
 import com.tinyplan.exam.entity.po.ExamDetail;
 import com.tinyplan.exam.entity.vo.ExamDetailVO;
+import com.tinyplan.exam.entity.vo.ExamSessionVO;
 import com.tinyplan.exam.entity.vo.Pagination;
 
 import java.util.List;
@@ -19,5 +20,9 @@ public interface ExamService {
     Pagination<ExamDetailVO> getExam(Integer pageSize);
 
     void updateExamStatus(String examNo, Integer status);
+
+    List<ExamSessionVO> getAllExamSession();
+
+    void updateExamSession(String examNo, String examStart, String examEnd);
 
 }

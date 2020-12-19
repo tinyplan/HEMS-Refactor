@@ -22,6 +22,12 @@
         WHERE job_id = #{jobId}
     </update>
 
+    <update id="updateJobExecuteTime">
+        UPDATE job_exam_status
+        SET execute_time = #{job.executeTime}
+        WHERE exam_no = #{job.examNo} AND execute_time = #{oldTime} AND original_status = #{job.originalStatus}
+    </update>
+
     <select id="getJobByStatus" resultType="com.tinyplan.exam.entity.po.StatusJob">
         SELECT <include refid="examStatusJobColumn"/>
         FROM job_exam_status

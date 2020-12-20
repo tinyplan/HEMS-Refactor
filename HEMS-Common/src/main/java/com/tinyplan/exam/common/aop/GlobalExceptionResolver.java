@@ -6,6 +6,7 @@ import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,6 +27,9 @@ public class GlobalExceptionResolver {
         if (e instanceof TokenExpiredException) {
             LOGGER.error(ResultStatus.RES_ILLEGAL_REQUEST.getMessage());
             return new ApiResult<>(ResultStatus.RES_ILLEGAL_REQUEST, null);
+        } else if (e instanceof HttpRequestMethodNotSupportedException) {
+            LOGGER.error(ResultStatus.RES_INVALID_REQUEST_TYPE.getMessage());
+            return new ApiResult<>(ResultStatus.RES_INVALID_REQUEST_TYPE, null);
         }
         e.printStackTrace();
         return new ApiResult<>(ResultStatus.RES_UNKNOWN_ERROR, null);

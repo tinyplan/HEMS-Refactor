@@ -27,6 +27,7 @@ public class PrefixUtil {
         OBJECT_PREFIX_MAP.put(ObjectType.ENROLL_APPLY, "ea");
         OBJECT_PREFIX_MAP.put(ObjectType.EXAM_JOB, "job_exam");
         OBJECT_PREFIX_MAP.put(ObjectType.ENROLL_JOB, "job_enroll");
+        OBJECT_PREFIX_MAP.put(ObjectType.SITE, "site");
     }
 
     public static String getUserPrefix(UserType type) {

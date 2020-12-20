@@ -1,12 +1,17 @@
 package com.tinyplan.exam.service.impl;
 
 import com.tinyplan.exam.common.utils.type.StatusUtil;
+import com.tinyplan.exam.entity.dto.SiteInfoDTO;
 import com.tinyplan.exam.entity.form.*;
 import com.tinyplan.exam.entity.po.*;
 import com.tinyplan.exam.entity.pojo.type.ApplyStatus;
+import com.tinyplan.exam.entity.pojo.type.SiteStatus;
 import com.tinyplan.exam.entity.vo.*;
 import com.tinyplan.exam.service.DataInjectService;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class DataInjectServiceImpl implements DataInjectService {
@@ -170,5 +175,16 @@ public class DataInjectServiceImpl implements DataInjectService {
         sessionVO.setExamStart(tmp1[1]);
         sessionVO.setExamEnd(tmp2[1]);
         return sessionVO;
+    }
+
+    @Override
+    public Site injectSite(SiteInfoDTO dto) {
+        Site site = new Site();
+        site.setBuilding(dto.getBuilding());
+        site.setFloor(dto.getFloor());
+        site.setRoom(dto.getRoom());
+        site.setCapacity(dto.getCapacity());
+        site.setStatus(SiteStatus.AVAILABLE.getCode());
+        return site;
     }
 }

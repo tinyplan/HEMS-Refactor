@@ -1,15 +1,17 @@
 package com.tinyplan.exam.service;
 
 import com.tinyplan.exam.entity.po.News;
+import com.tinyplan.exam.entity.pojo.type.ObjectType;
 import com.tinyplan.exam.entity.vo.NewsVO;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.List;
 
 public interface ImageService {
 
-    void saveToLocal(String localPath, String filename, MultipartFile file);
+    String saveToLocal(String localPath, String filename, MultipartFile file);
 
     void deleteLocal(String localPath, String filename);
 
@@ -22,5 +24,7 @@ public interface ImageService {
     List<NewsVO> handleNewsImage(List<News> newsList);
 
     NewsVO handleNewsImage(News news);
+
+    String getFileTmpPath(HttpServletRequest request, ObjectType type);
 
 }

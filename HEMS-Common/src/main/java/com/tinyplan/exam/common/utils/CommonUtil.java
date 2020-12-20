@@ -13,7 +13,7 @@ public class CommonUtil {
      *
      * @param maxId 查询出的最大ID
      */
-    public static Integer checkMaxId(Integer maxId){
+    public static Integer checkMaxId(Integer maxId) {
         return maxId == null ? 0 : maxId;
     }
 

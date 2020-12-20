@@ -6,10 +6,14 @@ import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.BatchStatus;
 import com.qiniu.util.Auth;
+import com.tinyplan.exam.common.properties.HEMSProperties;
 import com.tinyplan.exam.common.properties.QiniuProperties;
+import com.tinyplan.exam.common.utils.JwtUtil;
 import com.tinyplan.exam.entity.po.News;
 import com.tinyplan.exam.entity.pojo.BusinessException;
+import com.tinyplan.exam.entity.pojo.JwtDataLoad;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
+import com.tinyplan.exam.entity.pojo.type.ObjectType;
 import com.tinyplan.exam.entity.vo.NewsVO;
 import com.tinyplan.exam.service.ImageService;
 import org.slf4j.Logger;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +34,9 @@ public class ImageServiceImpl implements ImageService {
 
     @Resource(name = "qiniuProperties")
     private QiniuProperties qiniuProperties;
+
+    @Resource(name = "hemsProperties")
+    private HEMSProperties hemsProperties;
 
     @Resource(name = "uploadManager")
     private UploadManager uploadManager;
@@ -47,7 +55,7 @@ public class ImageServiceImpl implements ImageService {
      * @param file      文件
      */
     @Override
-    public void saveToLocal(String localPath, String filename, MultipartFile file) {
+    public String saveToLocal(String localPath, String filename, MultipartFile file) {
         File root = new File(localPath);
         // 根目录不存在
         if (!root.exists()) {
@@ -61,6 +69,7 @@ public class ImageServiceImpl implements ImageService {
             // 保存文件
             file.transferTo(imageFile);
             LOGGER.info("上传成功: " + imageFile.getAbsolutePath());
+            return imageFile.getAbsolutePath();
         } catch (IOException e) {
             // e.printStackTrace();
             LOGGER.error("上传失败: " + imageFile.getAbsolutePath());
@@ -84,7 +93,7 @@ public class ImageServiceImpl implements ImageService {
      *
      * @param filePath 文件全路径
      */
-    private void deleteLocal(String filePath){
+    private void deleteLocal(String filePath) {
         this.deleteLocal(new File(filePath));
     }
 
@@ -204,7 +213,7 @@ public class ImageServiceImpl implements ImageService {
      *
      * @param newsVO 待处理的新闻对象
      */
-    private void bindCoverImageUrl(NewsVO newsVO){
+    private void bindCoverImageUrl(NewsVO newsVO) {
         newsVO.setCoverImg(qiniuProperties.getDomain() + newsVO.getCoverImg());
     }
 
@@ -212,9 +221,9 @@ public class ImageServiceImpl implements ImageService {
      * 拼接新闻内容图片URL
      *
      * @param newsVO 待处理的新闻对象
-     * @param raw 从数据库中获取到的新闻信息
+     * @param raw    从数据库中获取到的新闻信息
      */
-    private void bindContentImageUrl(NewsVO newsVO, News raw){
+    private void bindContentImageUrl(NewsVO newsVO, News raw) {
         String contentImg = raw.getContentImg();
         if (contentImg == null || contentImg.length() == 0) {
             return;
@@ -224,5 +233,31 @@ public class ImageServiceImpl implements ImageService {
         for (String image : contentImages) {
             contentImgList.add(qiniuProperties.getDomain() + image);
         }
+    }
+
+    /**
+     * 构建文件保存的路径(项目根路径 + 缓存路径 + 用户ID命名的目录)
+     *
+     * @param request 请求体
+     * @param type    类型
+     * @return 保存路径
+     */
+    public String getFileTmpPath(HttpServletRequest request, ObjectType type) {
+        String tmp;
+        switch (type) {
+            case NEWS:
+                tmp = hemsProperties.getNewsTmpDir();
+                break;
+            case EXCEL:
+                tmp = hemsProperties.getExcelTmpDir();
+                break;
+            case CERTIFICATE:
+                tmp = hemsProperties.getCertificateTmpDir();
+                break;
+            default:
+                throw new BusinessException(ResultStatus.RES_UNKNOWN_ERROR, "只能为新闻、excel或认证类型");
+        }
+        JwtDataLoad load = JwtUtil.getDataLoad(request);
+        return request.getServletContext().getRealPath(tmp + load.getUserId());
     }
 }

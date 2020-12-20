@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tinyplan.exam.dao.SiteMapper">
+
+    <sql id="rawSiteColumn">
+        site_id, building, floor, room, capacity, status
+    </sql>
+
+    <sql id="siteColumn">
+        site_id AS siteId, building, floor, room, capacity, status
+    </sql>
+
+    <insert id="insertSite">
+        INSERT INTO site (<include refid="rawSiteColumn"/>)
+        VALUES (#{siteId}, #{building}, #{floor}, #{room}, #{capacity}, #{status})
+    </insert>
+
+    <insert id="insertSites">
+        INSERT INTO site (<include refid="rawSiteColumn"/>)
+        VALUES
+        <foreach collection="siteList" item="site" separator=", ">
+            (#{site.siteId}, #{site.building}, #{site.floor}, #{site.room}, #{site.capacity}, #{site.status})
+        </foreach>
+    </insert>
+
+    <update id="updateSiteStatus">
+        UPDATE site
+        SET status = #{status}
+        <where>
+            <if test="siteId != null and siteId != ''">
+                AND site_id = #{siteId}
+            </if>
+            <if test="room != null and room != ''">
+                AND room = #{room}
+            </if>
+        </where>
+    </update>
+
+    <update id="updateSiteCapacity">
+        UPDATE site
+        SET capacity = #{capacity}
+        WHERE room = #{room}
+    </update>
+
+    <select id="getSiteByRoom" resultType="com.tinyplan.exam.entity.po.Site">
+        SELECT <include refid="siteColumn"/>
+        FROM site
+        WHERE room = #{room}
+    </select>
+
+    <select id="querySite" resultType="com.tinyplan.exam.entity.po.Site">
+        SELECT <include refid="siteColumn"/>
+        FROM site
+        <where>
+            <if test="building != null and building != ''">
+                AND building = #{building}
+            </if>
+            <if test="floor != null and floor != ''">
+                AND floor = #{floor}
+            </if>
+            AND status != -1
+        </where>
+    </select>
+</mapper>

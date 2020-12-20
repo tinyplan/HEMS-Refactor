@@ -1,8 +1,11 @@
 package com.tinyplan.exam.service;
 
+import com.tinyplan.exam.entity.dto.SiteInfoDTO;
 import com.tinyplan.exam.entity.form.*;
 import com.tinyplan.exam.entity.po.*;
 import com.tinyplan.exam.entity.vo.*;
+
+import java.util.List;
 
 public interface DataInjectService {
 
@@ -27,5 +30,7 @@ public interface DataInjectService {
     PortalEnrollVO injectPortalEnrollVO(Enroll enroll, ExamDetail examDetail);
 
     ExamSessionVO injectExamSession(ExamDetail examDetail);
+
+    Site injectSite(SiteInfoDTO dto);
 
 }

@@ -2,15 +2,18 @@ package com.tinyplan.exam.service.impl;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.tinyplan.exam.common.properties.HEMSProperties;
-import com.tinyplan.exam.common.utils.*;
+import com.tinyplan.exam.common.utils.CommonUtil;
+import com.tinyplan.exam.common.utils.JwtUtil;
+import com.tinyplan.exam.common.utils.PaginationUtil;
+import com.tinyplan.exam.common.utils.PrefixUtil;
 import com.tinyplan.exam.dao.AdminMapper;
 import com.tinyplan.exam.dao.NewsMapper;
 import com.tinyplan.exam.entity.po.News;
 import com.tinyplan.exam.entity.po.User;
 import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.JwtDataLoad;
-import com.tinyplan.exam.entity.pojo.type.ObjectType;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
+import com.tinyplan.exam.entity.pojo.type.ObjectType;
 import com.tinyplan.exam.entity.vo.NewsVO;
 import com.tinyplan.exam.entity.vo.Pagination;
 import com.tinyplan.exam.service.ImageService;
@@ -187,7 +190,9 @@ public class NewsServiceImpl implements NewsService {
      * 构建文件保存的路径(项目根路径 + 缓存路径 + 用户ID命名的目录)
      *
      * @return 保存路径
+     * @deprecated 整合到ImageService中
      */
+    @Deprecated
     private String generateTmpPath(HttpServletRequest request) {
         JwtDataLoad load = JwtUtil.getDataLoad(request);
         return request.getServletContext().getRealPath(hemsProperties.getNewsTmpDir() + load.getUserId());

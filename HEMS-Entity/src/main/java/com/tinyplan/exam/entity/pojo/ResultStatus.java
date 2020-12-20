@@ -40,11 +40,16 @@ public enum ResultStatus {
     RES_NOT_EXIST_EXAM(20046, "不存在的考试"),
     RES_UPDATE_ILLEGAL_EXAM_STATUS(20047, "修改考试状态非法"),
     RES_UPDATE_EXAM_FAIL(20048, "无法修改考试场次"),
+    // 考点管理
+    RES_SITE_CONFLICT(20050, "考点已存在"),
 
     RES_ILLEGAL_REQUEST(40003, "非法请求"),
     RES_UNKNOWN_ERROR(50000, "未知异常"),
     RES_API_CALL_FAILED(50001, "API调用失败"),
-    RES_INVALID_PARAM(50002, "参数校验异常");
+    RES_INVALID_PARAM(50002, "参数校验异常"),
+    RES_INVALID_FILE_TYPE(50003, "文件格式不符"),
+    RES_INVALID_REQUEST_TYPE(50004, "错误的请求方法");
+
 
     private final int code;
     private final String message;

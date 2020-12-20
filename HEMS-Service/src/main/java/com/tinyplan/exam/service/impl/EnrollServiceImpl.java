@@ -63,7 +63,7 @@ public class EnrollServiceImpl implements EnrollService {
             throw new BusinessException(ResultStatus.RES_EXAM_NOT_DURING_ENROLL);
         }
         // 检查该场考试是否人数已满
-        if (examDetail.getCapacity() <= 0) {
+        if (examDetail.getRemain() <= 0) {
             throw new BusinessException(ResultStatus.RES_EXAM_CAPACITY_OVERFLOW);
         }
         // 检查该考生是否有考试资格(成绩表)
@@ -72,7 +72,7 @@ public class EnrollServiceImpl implements EnrollService {
             // 查询该考生通过的考试
             List<Score> scoreList = scoreMapper.getScoreByCandidateId(candidateDetail.getId(), 1);
             for (Score score : scoreList) {
-                if (score.getLevel() >= examDetail.getLevel()) {
+                if (score.getLevel() > examDetail.getLevel()) {
                     hasQualification = true;
                     break;
                 }

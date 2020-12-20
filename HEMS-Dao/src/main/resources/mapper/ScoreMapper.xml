@@ -7,10 +7,28 @@
         candidate_id AS candidateId, candidate_no AS candidateNo, exam_no AS examNo, `level`, score, `pass`
     </sql>
 
+    <sql id="rawScoreColumn">
+        candidate_id, candidate_no, exam_no, `level`, score, `pass`
+    </sql>
+
+    <insert id="insertScore">
+        INSERT INTO exam_score (<include refid="rawScoreColumn"/>)
+        VALUES
+        <foreach collection="scoreList" item="score" separator=", ">
+            (#{score.candidateId}, #{score.candidateNo}, #{score.examNo}, #{score.level}, #{score.score}, #{score.pass})
+        </foreach>
+    </insert>
+
     <select id="getScoreByCandidateId" resultType="com.tinyplan.exam.entity.po.Score">
         SELECT <include refid="scoreColumn"/>
         FROM exam_score
         WHERE candidate_id = #{candidateId} AND `pass` = #{pass}
         ORDER BY `level` DESC
+    </select>
+
+    <select id="getScoreByExamNo" resultType="com.tinyplan.exam.entity.po.Score">
+        SELECT <include refid="scoreColumn"/>
+        FROM exam_score
+        WHERE exam_no = #{examNo}
     </select>
 </mapper>

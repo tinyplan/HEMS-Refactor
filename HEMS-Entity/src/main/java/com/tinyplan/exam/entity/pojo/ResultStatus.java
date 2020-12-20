@@ -42,6 +42,7 @@ public enum ResultStatus {
     RES_UPDATE_EXAM_FAIL(20048, "无法修改考试场次"),
     // 考点管理
     RES_SITE_CONFLICT(20050, "考点已存在"),
+    RES_SITE_UPDATE_CAPACITY_FAIL(20051, "有考试待开考, 无法修改考点容量"),
 
     RES_ILLEGAL_REQUEST(40003, "非法请求"),
     RES_UNKNOWN_ERROR(50000, "未知异常"),

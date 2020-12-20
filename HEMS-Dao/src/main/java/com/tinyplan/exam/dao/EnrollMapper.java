@@ -3,6 +3,7 @@ package com.tinyplan.exam.dao;
 import com.tinyplan.exam.entity.po.CandidateDetail;
 import com.tinyplan.exam.entity.po.Enroll;
 import com.tinyplan.exam.entity.po.ExamDetail;
+import com.tinyplan.exam.entity.po.Score;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +22,11 @@ public interface EnrollMapper {
     Integer insertEnroll(@Param("enroll") Enroll enroll, @Param("detail") CandidateDetail detail);
 
     Integer updateEnrollStatus(@Param("enrollId") String enrollId, @Param("status") Integer status);
+
+    /**
+     * 修改报名状态为考试完成(专用)
+     */
+    Integer updateEnrollStatusByScore(@Param("scoreList") List<Score> scoreList, @Param("status") Integer status);
 
     /**
      * 根据真实姓名获取报名信息(若该报名信息对应的考试不是在报名中的状态, 将不会被查询)

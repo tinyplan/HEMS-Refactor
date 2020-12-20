@@ -48,6 +48,15 @@
         WHERE enroll_id = #{enrollId}
     </update>
 
+    <update id="updateEnrollStatusByScore">
+        UPDATE enroll
+        SET status = #{status}
+        WHERE enroll_id in
+        <foreach collection="scoreList" separator=", " item="score" open="(" close=")">
+            #{score.candidateNo}
+        </foreach>
+    </update>
+
     <select id="getLivedEnrollByCandidateId" resultType="com.tinyplan.exam.entity.po.Enroll">
         SELECT <include refid="enrollColumn"/>
         FROM enroll

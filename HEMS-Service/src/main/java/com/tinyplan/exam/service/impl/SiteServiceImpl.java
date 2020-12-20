@@ -2,11 +2,14 @@ package com.tinyplan.exam.service.impl;
 
 import com.tinyplan.exam.common.utils.ExcelUtil;
 import com.tinyplan.exam.common.utils.PrefixUtil;
+import com.tinyplan.exam.dao.ExamDetailMapper;
 import com.tinyplan.exam.dao.SiteMapper;
 import com.tinyplan.exam.entity.dto.SiteInfoDTO;
+import com.tinyplan.exam.entity.po.ExamDetail;
 import com.tinyplan.exam.entity.po.Site;
 import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
+import com.tinyplan.exam.entity.pojo.type.ExamStatus;
 import com.tinyplan.exam.entity.pojo.type.ObjectType;
 import com.tinyplan.exam.entity.pojo.type.SiteStatus;
 import com.tinyplan.exam.entity.vo.SiteVO;
@@ -15,6 +18,7 @@ import com.tinyplan.exam.service.ImageService;
 import com.tinyplan.exam.service.SiteService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -35,6 +39,9 @@ public class SiteServiceImpl implements SiteService {
 
     @Resource(name = "siteMapper")
     private SiteMapper siteMapper;
+
+    @Resource(name = "examDetailMapper")
+    private ExamDetailMapper examDetailMapper;
 
     @Override
     @Transactional
@@ -104,6 +111,11 @@ public class SiteServiceImpl implements SiteService {
     @Override
     @Transactional
     public void updateCapacity(String room, Integer capacity) {
+        List<ExamDetail> list = examDetailMapper.getExamDetailByStatus(ExamStatus.BEFORE_EXAM.getCode());
+        if (list != null && list.size() != 0) {
+            // 有考试正在开考, 无法修改
+            throw new BusinessException(ResultStatus.RES_SITE_UPDATE_CAPACITY_FAIL);
+        }
         siteMapper.updateSiteCapacity(room, capacity);
     }
 }

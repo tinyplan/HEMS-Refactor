@@ -1,5 +1,7 @@
 package com.tinyplan.exam.entity.po;
 
+import com.tinyplan.exam.entity.dto.ScoreDTO;
+
 public class Score {
     private String candidateId;
     private String candidateNo;
@@ -9,6 +11,15 @@ public class Score {
     private Integer pass;
 
     public Score() {}
+
+    public Score(ScoreDTO dto, Enroll enroll, ExamDetail detail) {
+        this.candidateId = enroll.getCandidateId();
+        this.candidateNo = dto.getCandidateNo();
+        this.examNo = enroll.getExamNo();
+        this.level = detail.getLevel();
+        this.score = dto.getScore();
+        this.pass = this.score >= detail.getPassLine() ? 1 : -1;
+    }
 
     public String getCandidateId() {
         return candidateId;

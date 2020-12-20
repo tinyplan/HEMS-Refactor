@@ -33,8 +33,10 @@ class SystemApplicationTests {
 
     @Test
     void readExcel() {
-        File excel = new File("C:\\Users\\34054\\Desktop\\test\\考点导入.xlsx");
-        System.out.println(ExcelUtil.readSiteExcel(excel));
+        // File excel = new File("C:\\Users\\34054\\Desktop\\test\\考点导入.xlsx");
+        // System.out.println(ExcelUtil.readSiteExcel(excel));
+        File excel = new File("C:\\Users\\34054\\Desktop\\test\\成绩导入 - 副本.xlsx");
+        System.out.println(ExcelUtil.readScoreExcel(excel));
     }
 
 }

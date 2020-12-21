@@ -5,8 +5,6 @@ import com.tinyplan.exam.entity.form.*;
 import com.tinyplan.exam.entity.po.*;
 import com.tinyplan.exam.entity.vo.*;
 
-import java.util.List;
-
 public interface DataInjectService {
 
     User injectUser(RegisterForm form);
@@ -32,5 +30,7 @@ public interface DataInjectService {
     ExamSessionVO injectExamSession(ExamDetail examDetail);
 
     Site injectSite(SiteInfoDTO dto);
+
+    PortalScoreInfoVO injectPortalScoreInfoVO(Score score, ExamDetail examDetail);
 
 }

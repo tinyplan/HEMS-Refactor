@@ -85,7 +85,14 @@
     <select id="getEnrollByCandidateId" resultType="com.tinyplan.exam.entity.po.Enroll">
         SELECT <include refid="enrollColumn"/>
         FROM enroll
-        WHERE candidate_id = #{candidateId}
+        <where>
+            <if test="candidateId != null and candidateId != ''">
+                AND candidate_id = #{candidateId}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
     </select>
 
     <select id="getEnrollByCandidateIdAndEnrollId" resultType="com.tinyplan.exam.entity.po.Enroll">
@@ -98,5 +105,11 @@
         SELECT <include refid="enrollColumn"/>
         FROM enroll
         WHERE enroll_id = #{enrollId}
+    </select>
+
+    <select id="getSuccessEnrollByCandidateId" resultType="com.tinyplan.exam.entity.po.Enroll">
+        SELECT <include refid="enrollColumn"/>
+        FROM enroll
+        WHERE candidate_id = #{candidateId} AND status IN (1, 2)
     </select>
 </mapper>

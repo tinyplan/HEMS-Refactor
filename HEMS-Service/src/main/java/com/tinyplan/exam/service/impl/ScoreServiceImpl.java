@@ -1,6 +1,8 @@
 package com.tinyplan.exam.service.impl;
 
 import com.tinyplan.exam.common.utils.ExcelUtil;
+import com.tinyplan.exam.common.utils.JwtUtil;
+import com.tinyplan.exam.common.utils.PaginationUtil;
 import com.tinyplan.exam.common.utils.type.StatusUtil;
 import com.tinyplan.exam.dao.CandidateMapper;
 import com.tinyplan.exam.dao.EnrollMapper;
@@ -11,10 +13,14 @@ import com.tinyplan.exam.entity.po.Enroll;
 import com.tinyplan.exam.entity.po.ExamDetail;
 import com.tinyplan.exam.entity.po.Score;
 import com.tinyplan.exam.entity.pojo.BusinessException;
+import com.tinyplan.exam.entity.pojo.JwtDataLoad;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
 import com.tinyplan.exam.entity.pojo.type.EnrollStatus;
 import com.tinyplan.exam.entity.pojo.type.ObjectType;
+import com.tinyplan.exam.entity.vo.Pagination;
+import com.tinyplan.exam.entity.vo.PortalScoreInfoVO;
 import com.tinyplan.exam.entity.vo.ScoreVO;
+import com.tinyplan.exam.service.DataInjectService;
 import com.tinyplan.exam.service.ImageService;
 import com.tinyplan.exam.service.ScoreService;
 import org.springframework.stereotype.Service;
@@ -23,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +40,9 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Resource(name = "imageServiceImpl")
     private ImageService imageService;
+
+    @Resource(name = "dataInjectServiceImpl")
+    private DataInjectService dataInjectService;
 
     @Resource(name = "enrollMapper")
     private EnrollMapper enrollMapper;
@@ -85,5 +95,20 @@ public class ScoreServiceImpl implements ScoreService {
             result.add(scoreVO);
         }
         return result;
+    }
+
+    @Override
+    public Pagination<PortalScoreInfoVO> getScoreForPortal(String token, Integer pageSize) {
+        JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
+        List<Score> scoreList = scoreMapper.getScoreByCandidateId(load.getUserId(), null);
+        List<PortalScoreInfoVO> result = new ArrayList<>(scoreList.size());
+        for (Score score : scoreList) {
+            result.add(dataInjectService.injectPortalScoreInfoVO(
+                    score, examDetailMapper.getExamDetailByNo(score.getExamNo())));
+        }
+        Pagination<PortalScoreInfoVO> pagination = new Pagination<>();
+        pagination.setTableData(PaginationUtil.getLogicPagination(result, pageSize));
+        pagination.setTotal(pagination.getTableData().size());
+        return pagination;
     }
 }

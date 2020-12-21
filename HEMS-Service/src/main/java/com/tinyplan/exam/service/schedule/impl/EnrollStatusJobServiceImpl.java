@@ -60,21 +60,34 @@ public class EnrollStatusJobServiceImpl implements EnrollStatusJobService {
 
     @Override
     @Transactional
-    public Integer addJobs(String enrollId) {
-        EnrollStatusJobInfo job = new EnrollStatusJobInfo();
+    public Integer addJobs(String enrollId, String enrollEnd) {
+        // 超过24小时未缴费的定时任务
+        EnrollStatusJobInfo job1 = new EnrollStatusJobInfo();
+        // 超过报名结束时间的定时任务
+        EnrollStatusJobInfo job2 = new EnrollStatusJobInfo();
 
         String prefix = PrefixUtil.getObjectPrefix(ObjectType.ENROLL_JOB);
         String date = DateUtil.format(new Date(), "yyyyMMdd");
         String maxId = String.valueOf(CommonUtil.checkMaxId(enrollStatusJobMapper.getMaxId()) + 1);
-        job.setJobId(PrefixUtil.generateId(prefix, date, maxId));
 
-        job.setEnrollId(enrollId);
-        job.setOriginalStatus(EnrollStatus.WAITING_PAY.getCode());
-        job.setUpdateStatus(EnrollStatus.ENROLL_FAIL.getCode());
-        job.setStatus(JobExecuteStatus.NOT_EXECUTE.getCode());
-
+        job1.setJobId(PrefixUtil.generateId(prefix, date, maxId));
+        job1.setEnrollId(enrollId);
+        job1.setOriginalStatus(EnrollStatus.WAITING_PAY.getCode());
+        job1.setUpdateStatus(EnrollStatus.ENROLL_FAIL.getCode());
+        job1.setStatus(JobExecuteStatus.NOT_EXECUTE.getCode());
         Date executeTime = DateUtil.offsetDay(new Date(), 1);
-        job.setExecuteTime(DateUtil.format(executeTime, "yyyy-MM-dd HH:mm"));
-        return enrollStatusJobMapper.insertJob(job);
+        job1.setExecuteTime(DateUtil.format(executeTime, "yyyy-MM-dd HH:mm"));
+        Integer result = enrollStatusJobMapper.insertJob(job1);
+
+        maxId = String.valueOf(CommonUtil.checkMaxId(enrollStatusJobMapper.getMaxId()) + 1);
+        job2.setJobId(PrefixUtil.generateId(prefix, date, maxId));
+        job2.setEnrollId(enrollId);
+        job1.setOriginalStatus(EnrollStatus.WAITING_PAY.getCode());
+        job1.setUpdateStatus(EnrollStatus.ENROLL_FAIL.getCode());
+        job2.setExecuteTime(enrollEnd);
+        job2.setStatus(JobExecuteStatus.NOT_EXECUTE.getCode());
+        result += enrollStatusJobMapper.insertJob(job2);
+
+        return result;
     }
 }

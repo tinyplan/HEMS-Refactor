@@ -22,7 +22,14 @@
     <select id="getScoreByCandidateId" resultType="com.tinyplan.exam.entity.po.Score">
         SELECT <include refid="scoreColumn"/>
         FROM exam_score
-        WHERE candidate_id = #{candidateId} AND `pass` = #{pass}
+        <where>
+            <if test="candidateId != null and candidateId != ''">
+                AND candidate_id = #{candidateId}
+            </if>
+            <if test="pass != null">
+                AND `pass` = #{pass}
+            </if>
+        </where>
         ORDER BY `level` DESC
     </select>
 

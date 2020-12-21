@@ -148,7 +148,7 @@ public class DataInjectServiceImpl implements DataInjectService {
         candidateInfoVO.setRealName(enroll.getRealName());
         candidateInfoVO.setIdCard(enroll.getIdCard());
         candidateInfoVO.setCandidateNo(enroll.getEnrollId());
-        candidateInfoVO.setGender(enroll.getGender() == 1 ? "男": "女");
+        candidateInfoVO.setGender(enroll.getGender() == 1 ? "男" : "女");
         candidateInfoVO.setContact(enroll.getContact());
         candidateInfoVO.setEmail(enroll.getEmail());
         candidateInfoVO.setEduBack(enroll.getEduBack());
@@ -180,11 +180,25 @@ public class DataInjectServiceImpl implements DataInjectService {
     @Override
     public Site injectSite(SiteInfoDTO dto) {
         Site site = new Site();
-        site.setBuilding(dto.getBuilding());
+        site.setBuilding(dto.getBuilding().toUpperCase());
         site.setFloor(dto.getFloor());
-        site.setRoom(dto.getRoom());
+        site.setRoom(dto.getRoom().toLowerCase());
         site.setCapacity(dto.getCapacity());
         site.setStatus(SiteStatus.AVAILABLE.getCode());
         return site;
+    }
+
+    public PortalScoreInfoVO injectPortalScoreInfoVO(Score score, ExamDetail examDetail) {
+        PortalScoreInfoVO result = new PortalScoreInfoVO();
+        result.setExamId(examDetail.getExamId());
+        result.setExamNo(score.getExamNo());
+        result.setEnrollId(score.getCandidateNo());
+        result.setLevel(StatusUtil.getExamLevel(examDetail.getLevel()).getDescription());
+        result.setExamName(examDetail.getExamName());
+        result.setExamStart(examDetail.getExamStart());
+        result.setExamEnd(examDetail.getExamEnd());
+        result.setScore(score.getScore());
+        result.setPass(score.getPass() == 1 ? "合格" : "不合格");
+        return result;
     }
 }

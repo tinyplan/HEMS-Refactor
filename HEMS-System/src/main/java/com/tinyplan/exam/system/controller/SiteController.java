@@ -34,9 +34,9 @@ public class SiteController {
     @Authorization
     public ApiResult<Object> addSite(@RequestBody SiteForm form) {
         Site site = new Site();
-        site.setBuilding(form.getBuilding());
+        site.setBuilding(form.getBuilding().toUpperCase());
         site.setFloor(form.getFloor());
-        site.setRoom(form.getClassroom());
+        site.setRoom(form.getClassroom().toUpperCase());
         site.setCapacity(form.getCapacity());
         siteService.addSite(site);
         return new ApiResult<>(ResultStatus.RES_SUCCESS, null);

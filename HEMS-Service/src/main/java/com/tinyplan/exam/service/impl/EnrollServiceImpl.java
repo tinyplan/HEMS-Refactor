@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.tinyplan.exam.common.utils.JwtUtil;
 import com.tinyplan.exam.common.utils.PaginationUtil;
-import com.tinyplan.exam.common.utils.type.StatusUtil;
 import com.tinyplan.exam.dao.EnrollMapper;
 import com.tinyplan.exam.dao.ExamDetailMapper;
 import com.tinyplan.exam.dao.ScoreMapper;
@@ -120,7 +119,7 @@ public class EnrollServiceImpl implements EnrollService {
                 throw new BusinessException(ResultStatus.RES_EXAM_CAPACITY_OVERFLOW);
             }
             examDetailMapper.updateExamRemain(examNo, remain - 1);
-            enrollStatusJobService.addJobs(enroll.getEnrollId());
+            enrollStatusJobService.addJobs(enroll.getEnrollId(), examDetail.getEnrollEnd());
             return enrollId;
         } else {
             throw new BusinessException(ResultStatus.RES_ENROLL_HAVE_NOT_EXAM_QUALIFICATION);
@@ -190,17 +189,22 @@ public class EnrollServiceImpl implements EnrollService {
     }
 
     @Override
-    public Pagination<PortalEnrollVO> getEnrollForPortalWithPagination(Integer pageSize, String candidateId) {
-        List<Enroll> enrollList = enrollMapper.getEnrollByCandidateId(candidateId);
+    public Pagination<PortalEnrollVO> getEnrollForPortalWithPagination(Integer pageSize, String candidateId, Integer status) {
+        List<Enroll> enrollList = null;
+        if (EnrollStatus.ENROLL_SUCCESS.getCode().equals(status)){
+            // 查询报名成功的信息
+            enrollList = enrollMapper.getSuccessEnrollByCandidateId(candidateId);
+        } else {
+            enrollList = enrollMapper.getEnrollByCandidateId(candidateId, status);
+        }
         List<PortalEnrollVO> dataList = new ArrayList<>(enrollList.size());
         for (Enroll enroll : enrollList) {
-            dataList.add(
-                    dataInjectService.injectPortalEnrollVO(enroll, examDetailMapper.getExamDetailByNo(enroll.getExamNo()))
-            );
+            dataList.add(dataInjectService.injectPortalEnrollVO(
+                    enroll, examDetailMapper.getExamDetailByNo(enroll.getExamNo())));
         }
         Pagination<PortalEnrollVO> pagination = new Pagination<>();
-        pagination.setTotal(dataList.size());
         pagination.setTableData(PaginationUtil.getLogicPagination(dataList, pageSize));
+        pagination.setTotal(pagination.getTableData().size());
         return pagination;
     }
 

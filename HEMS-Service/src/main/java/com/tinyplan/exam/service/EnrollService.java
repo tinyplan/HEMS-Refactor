@@ -16,7 +16,7 @@ public interface EnrollService {
 
     void updateCandidateEnroll(Enroll enroll);
 
-    Pagination<PortalEnrollVO> getEnrollForPortalWithPagination(Integer pageSize, String candidateId);
+    Pagination<PortalEnrollVO> getEnrollForPortalWithPagination(Integer pageSize, String candidateId, Integer status);
 
     PortalEnrollVO getEnrollForPortal(String token, String enrollId);
 

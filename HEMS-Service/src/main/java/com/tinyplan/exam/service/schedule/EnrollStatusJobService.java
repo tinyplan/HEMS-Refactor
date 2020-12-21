@@ -8,6 +8,6 @@ public interface EnrollStatusJobService {
 
     List<EnrollExecuteResult> executeJob();
 
-    Integer addJobs(String enrollId);
+    Integer addJobs(String enrollId, String enrollEnd);
 
 }

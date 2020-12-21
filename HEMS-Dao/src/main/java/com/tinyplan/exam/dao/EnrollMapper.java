@@ -40,7 +40,9 @@ public interface EnrollMapper {
 
     Integer updateCandidateEnroll(Enroll enroll);
 
-    List<Enroll> getEnrollByCandidateId(@Param("candidateId") String candidateId);
+    List<Enroll> getEnrollByCandidateId(@Param("candidateId") String candidateId, @Param("status") Integer status);
+
+    List<Enroll> getSuccessEnrollByCandidateId(@Param("candidateId") String candidateId);
 
     Enroll getEnrollByCandidateIdAndEnrollId(@Param("candidateId") String candidateId,
                                              @Param("enrollId") String enrollId);

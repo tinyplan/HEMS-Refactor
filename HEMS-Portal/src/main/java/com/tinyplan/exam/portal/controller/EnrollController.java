@@ -76,7 +76,16 @@ public class EnrollController {
     public ApiResult<Pagination<PortalEnrollVO>> getEnroll(@RequestParam("pageSize") Integer pageSize,
                                                            @RequestParam("candidateId") String candidateId){
         return new ApiResult<>(ResultStatus.RES_SUCCESS,
-                enrollService.getEnrollForPortalWithPagination(pageSize, candidateId));
+                enrollService.getEnrollForPortalWithPagination(pageSize, candidateId, null));
+    }
+
+    @GetMapping("/type")
+    @Authorization
+    public ApiResult<Pagination<PortalEnrollVO>> getEnroll(@RequestParam("pageSize") Integer pageSize,
+                                                           @RequestParam("candidateId") String candidateId,
+                                                           @RequestParam("code") Integer code){
+        return new ApiResult<>(ResultStatus.RES_SUCCESS,
+                enrollService.getEnrollForPortalWithPagination(pageSize, candidateId, code));
     }
 
     /**

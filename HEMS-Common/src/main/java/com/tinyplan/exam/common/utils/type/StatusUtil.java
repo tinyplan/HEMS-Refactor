@@ -35,7 +35,12 @@ public class StatusUtil {
     }
 
     public static EnrollStatus getEnrollStatus(Integer statusCode) {
-        return ENROLL_STATUS_MAP.get(statusCode);
+        // 完成考试的状态对外隐藏, 也视作报名成功
+        if (EnrollStatus.FINISH_EXAM.getCode().equals(statusCode)) {
+            return EnrollStatus.FINISH_EXAM;
+        } else {
+            return ENROLL_STATUS_MAP.get(statusCode);
+        }
     }
 
     public static ExamLevel getExamLevel(Integer levelCode){

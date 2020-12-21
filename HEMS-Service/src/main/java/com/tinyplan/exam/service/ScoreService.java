@@ -12,6 +12,6 @@ public interface ScoreService {
 
     List<ScoreVO> uploadScore(HttpServletRequest request, MultipartFile excelFile);
 
-    Pagination<PortalScoreInfoVO> getScoreForPortal(String token, Integer pageSize);
+    Pagination<PortalScoreInfoVO> getScoreForPortal(String token, String candidateNo, Integer pageSize);
 
 }

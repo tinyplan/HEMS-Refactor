@@ -38,4 +38,15 @@
         FROM exam_score
         WHERE exam_no = #{examNo}
     </select>
+
+    <select id="getScoreByCandidateIdAndNo" resultType="com.tinyplan.exam.entity.po.Score">
+        SELECT <include refid="scoreColumn"/>
+        FROM exam_score
+        <where>
+            candidate_id = #{candidateId}
+            <if test="candidateNo != null and candidateNo != ''" >
+                AND candidate_no = #{candidateNo}
+            </if>
+        </where>
+    </select>
 </mapper>

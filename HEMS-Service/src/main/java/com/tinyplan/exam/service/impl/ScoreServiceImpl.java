@@ -16,6 +16,7 @@ import com.tinyplan.exam.entity.pojo.BusinessException;
 import com.tinyplan.exam.entity.pojo.JwtDataLoad;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
 import com.tinyplan.exam.entity.pojo.type.EnrollStatus;
+import com.tinyplan.exam.entity.pojo.type.ExamStatus;
 import com.tinyplan.exam.entity.pojo.type.ObjectType;
 import com.tinyplan.exam.entity.vo.Pagination;
 import com.tinyplan.exam.entity.vo.PortalScoreInfoVO;
@@ -98,13 +99,16 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public Pagination<PortalScoreInfoVO> getScoreForPortal(String token, Integer pageSize) {
+    public Pagination<PortalScoreInfoVO> getScoreForPortal(String token, String candidateNo, Integer pageSize) {
         JwtDataLoad load = new JwtDataLoad(JwtUtil.verify(token));
-        List<Score> scoreList = scoreMapper.getScoreByCandidateId(load.getUserId(), null);
+        List<Score> scoreList = scoreMapper.getScoreByCandidateIdAndNo(load.getUserId(), candidateNo);
         List<PortalScoreInfoVO> result = new ArrayList<>(scoreList.size());
         for (Score score : scoreList) {
-            result.add(dataInjectService.injectPortalScoreInfoVO(
-                    score, examDetailMapper.getExamDetailByNo(score.getExamNo())));
+            ExamDetail examDetail = examDetailMapper.getExamDetailByNo(score.getExamNo());
+            // 当考试状态为成绩发布时, 才能显示
+            if (examDetail.getStatus().equals(ExamStatus.SCORE_PUBLISH.getCode())) {
+                result.add(dataInjectService.injectPortalScoreInfoVO(score, examDetail));
+            }
         }
         Pagination<PortalScoreInfoVO> pagination = new Pagination<>();
         pagination.setTableData(PaginationUtil.getLogicPagination(result, pageSize));

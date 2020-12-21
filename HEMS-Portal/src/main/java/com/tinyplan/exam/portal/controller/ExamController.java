@@ -11,6 +11,7 @@ import com.tinyplan.exam.service.ExamService;
 import com.tinyplan.exam.service.ScoreService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -34,10 +35,12 @@ public class ExamController {
     }
 
     @GetMapping("/exam/score")
+    @Authorization
     public ApiResult<Pagination<PortalScoreInfoVO>> getScore(HttpServletRequest request,
-                                                             @Param("pageSize") Integer pageSize) {
+                                                             @RequestParam("pageSize") Integer pageSize,
+                                                             @RequestParam("candidateNo") String candidateNo) {
         return new ApiResult<>(ResultStatus.RES_SUCCESS,
-                scoreService.getScoreForPortal(RequestUtil.getToken(request), pageSize));
+                scoreService.getScoreForPortal(RequestUtil.getToken(request), candidateNo, pageSize));
     }
 
 }

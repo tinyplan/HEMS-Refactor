@@ -15,4 +15,6 @@ public interface ScoreMapper {
 
     Integer insertScore(@Param("scoreList") List<Score> scoreList);
 
+    List<Score> getScoreByCandidateIdAndNo(@Param("candidateId") String candidateId, @Param("candidateNo") String candidateNo);
+
 }

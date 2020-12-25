@@ -111,8 +111,8 @@ public class SiteServiceImpl implements SiteService {
     @Override
     @Transactional
     public void updateCapacity(String room, Integer capacity) {
-        List<ExamDetail> list = examDetailMapper.getExamDetailByStatus(ExamStatus.BEFORE_EXAM.getCode());
-        if (list != null && list.size() != 0) {
+        Integer waitingExamCount = examDetailMapper.getExamDetailCountByStatus(ExamStatus.BEFORE_EXAM.getCode());
+        if (waitingExamCount != 0) {
             // 有考试正在开考, 无法修改
             throw new BusinessException(ResultStatus.RES_SITE_UPDATE_CAPACITY_FAIL);
         }

@@ -104,6 +104,12 @@
         WHERE status &lt; #{status}
     </select>
 
+    <select id="getExamDetailCountByStatus" resultType="java.lang.Integer">
+        SELECT COUNT(id)
+        FROM exam_detail
+        WHERE status = #{status}
+    </select>
+
     <insert id="insertExamDetail">
         INSERT INTO exam_detail (<include refid="rawExamDetailColumn"/>)
         VALUES (#{examNo}, #{examId}, #{level}, #{examName}, #{enrollStart}, #{enrollEnd}, #{examStart}, #{examEnd}, #{interval}, #{capacity}, #{remain}, #{fee}, #{passLine}, #{status})

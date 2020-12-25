@@ -43,6 +43,9 @@ public enum ResultStatus {
     // 考点管理
     RES_SITE_CONFLICT(20050, "考点已存在"),
     RES_SITE_UPDATE_CAPACITY_FAIL(20051, "有考试待开考, 无法修改考点容量"),
+    // 监考教师管理
+    RES_ERROR_CONTACT(20056, "错误的手机号码"),
+    RES_EXISTED_INV(20057, "重复的教师"),
 
     RES_ILLEGAL_REQUEST(40003, "非法请求"),
     RES_UNKNOWN_ERROR(50000, "未知异常"),

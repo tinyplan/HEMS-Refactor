@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tinyplan.exam.dao.InvigilatorMapper">
+
+    <sql id="invigilatorColumn">
+        invigilator_id AS invigilatorId, account_name AS accountName, real_name AS realName, password,
+        contact, role_id AS roleId, status
+    </sql>
+
+    <sql id="rawInvigilatorColumn">
+        invigilator_id, account_name, real_name, password, contact, role_id, status
+    </sql>
+
+    <insert id="insertInvigilators">
+        INSERT INTO invigilator (<include refid="rawInvigilatorColumn"/>)
+        VALUES
+        <foreach collection="invigilatorList" item="invigilator" separator=", ">
+            (#{invigilator.invigilatorId}, #{invigilator.accountName}, #{invigilator.realName}, #{invigilator.password},
+            #{invigilator.contact}, #{invigilator.roleId}, #{invigilator.status})
+        </foreach>
+    </insert>
+
+    <insert id="insertInvigilator">
+        INSERT INTO invigilator (<include refid="rawInvigilatorColumn"/>)
+        VALUES (#{invigilatorId}, #{accountName}, #{realName}, #{password}, #{contact}, #{roleId}, #{status})
+    </insert>
+
+    <update id="updateInvigilatorStatus">
+        UPDATE invigilator
+        SET status = #{status}
+        WHERE invigilator_id = #{invigilatorId}
+    </update>
+
+    <update id="updateInvigilator">
+        UPDATE invigilator
+        <set>
+            <if test="inv.realName != null and inv.realName != ''">
+                real_name = #{inv.realName},
+            </if>
+            <if test="inv.password != null and inv.password != ''">
+                password = #{inv.password},
+            </if>
+            <if test="inv.contact != null and inv.contact != ''">
+                contact = #{inv.contact},
+            </if>
+        </set>
+        WHERE invigilator_id = #{inv.invigilatorId}
+    </update>
+
+    <select id="getInvigilatorByStatus" resultType="com.tinyplan.exam.entity.po.Invigilator">
+        SELECT <include refid="invigilatorColumn"/>
+        FROM invigilator
+        WHERE status = #{status}
+    </select>
+
+    <select id="getMaxId" resultType="java.lang.Integer">
+        SELECT max(id)
+        FROM invigilator
+    </select>
+
+    <select id="getInvigilatorCount" resultType="java.lang.Integer">
+        SELECT count(id)
+        FROM invigilator
+        WHERE contact = #{contact} AND status = 1
+    </select>
+
+    <select id="getInvigilatorCountExceptSelf" resultType="java.lang.Integer">
+        SELECT count(id)
+        FROM invigilator
+        WHERE contact = #{contact} AND status = 1 AND invigilator_id != #{selfId}
+    </select>
+
+</mapper>

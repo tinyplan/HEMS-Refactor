@@ -33,4 +33,8 @@ public interface DataInjectService {
 
     PortalScoreInfoVO injectPortalScoreInfoVO(Score score, ExamDetail examDetail);
 
+    Invigilator injectInvigilator(AddInvigilatorForm form);
+
+    Invigilator injectInvigilator(UpdateInvigilatorForm form);
+
 }

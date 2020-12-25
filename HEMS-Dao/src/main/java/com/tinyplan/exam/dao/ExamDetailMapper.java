@@ -49,6 +49,8 @@ public interface ExamDetailMapper {
 
     List<ExamDetail> getExamDetailByStatus(@Param("status") Integer status);
 
+    Integer getExamDetailCountByStatus(@Param("status") Integer status);
+
     List<ExamDetail> getExamDetailByCondition(@Param("examName") String examName,
                                               @Param("level") Integer level,
                                               @Param("status") Integer status);

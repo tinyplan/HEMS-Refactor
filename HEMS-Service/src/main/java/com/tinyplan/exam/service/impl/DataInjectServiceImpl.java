@@ -201,4 +201,21 @@ public class DataInjectServiceImpl implements DataInjectService {
         result.setPass(score.getPass() == 1 ? "合格" : "不合格");
         return result;
     }
+
+    @Override
+    public Invigilator injectInvigilator(AddInvigilatorForm form) {
+        Invigilator invigilator = new Invigilator();
+        invigilator.setRealName(form.getRealName());
+        invigilator.setContact(form.getContact());
+        return invigilator;
+    }
+
+    @Override
+    public Invigilator injectInvigilator(UpdateInvigilatorForm form) {
+        Invigilator invigilator = new Invigilator();
+        invigilator.setInvigilatorId(form.getInvigilatorId());
+        invigilator.setRealName(form.getRealName());
+        invigilator.setContact(form.getContact());
+        return invigilator;
+    }
 }

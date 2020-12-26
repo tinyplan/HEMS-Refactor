@@ -5,6 +5,7 @@ import com.tinyplan.exam.entity.dto.SiteInfoDTO;
 import com.tinyplan.exam.entity.form.*;
 import com.tinyplan.exam.entity.po.*;
 import com.tinyplan.exam.entity.pojo.type.ApplyStatus;
+import com.tinyplan.exam.entity.pojo.type.ExamStatus;
 import com.tinyplan.exam.entity.pojo.type.SiteStatus;
 import com.tinyplan.exam.entity.vo.*;
 import com.tinyplan.exam.service.DataInjectService;
@@ -217,5 +218,35 @@ public class DataInjectServiceImpl implements DataInjectService {
         invigilator.setRealName(form.getRealName());
         invigilator.setContact(form.getContact());
         return invigilator;
+    }
+
+    @Override
+    public SystemArrangeVO injectSystemArrangeVO(CandidateDetail candidateDetail,
+                                                 CandidateArrange arrange,
+                                                 ExamDetail examDetail,
+                                                 Site site) {
+        SystemArrangeVO result = new SystemArrangeVO();
+        result.setCandidateId(candidateDetail.getId());
+        result.setRealName(candidateDetail.getRealName());
+        result.setCandidateNo(arrange.getCandidateNo());
+        result.setExamName(StatusUtil.getExamLevel(examDetail.getLevel()).getDescription() + examDetail.getExamName());
+        result.setSite(site.getRoom());
+        result.setSeat(arrange.getSeat());
+        result.setSession(examDetail.getExamStart() + "-" + (examDetail.getExamEnd().split(" "))[1]);
+        return result;
+    }
+
+    @Override
+    public PortalArrangeVO injectPortalArrangeVO(CandidateDetail candidateDetail, CandidateArrange arrange, ExamDetail examDetail, Site site) {
+        PortalArrangeVO result = new PortalArrangeVO();
+        result.setCandidateNo(arrange.getCandidateNo());
+        result.setRealName(candidateDetail.getRealName());
+        result.setExamName(examDetail.getExamName());
+        result.setLevel(StatusUtil.getExamLevel(examDetail.getLevel()).getDescription());
+        result.setIdCard(candidateDetail.getIdCard());
+        result.setExamPlace(String.format("%s %d座", site.getRoom(), arrange.getSeat()));
+        result.setExamStart(examDetail.getExamStart());
+        result.setExamEnd(examDetail.getExamEnd());
+        return result;
     }
 }

@@ -46,6 +46,8 @@ public enum ResultStatus {
     // 监考教师管理
     RES_ERROR_CONTACT(20056, "错误的手机号码"),
     RES_EXISTED_INV(20057, "重复的教师"),
+    // 考试分配
+    RES_ARRANGE_NEED_MORE_INV(20061, "教师不足"),
 
     RES_ILLEGAL_REQUEST(40003, "非法请求"),
     RES_UNKNOWN_ERROR(50000, "未知异常"),

@@ -37,4 +37,8 @@ public interface DataInjectService {
 
     Invigilator injectInvigilator(UpdateInvigilatorForm form);
 
+    SystemArrangeVO injectSystemArrangeVO(CandidateDetail candidateDetail, CandidateArrange arrange, ExamDetail examDetail, Site site);
+
+    PortalArrangeVO injectPortalArrangeVO(CandidateDetail candidateDetail, CandidateArrange arrange, ExamDetail examDetail, Site site);
+
 }

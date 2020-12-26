@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tinyplan.exam.dao.InvigilatorArrangeMapper">
+
+    <sql id="rawInvigilatorArrangeColumn">
+        invigilator_id, exam_no, site_id
+    </sql>
+
+    <sql id="invigilatorArrangeColumn">
+        invigilator_id AS invigilatorId, exam_no AS examNo, site_id AS siteId
+    </sql>
+
+    <insert id="insertArranges">
+        INSERT INTO invigilator_site_arrange (<include refid="rawInvigilatorArrangeColumn"/>)
+        VALUES
+        <foreach collection="list" item="arrange" separator=", ">
+            (#{arrange.invigilatorId}, #{arrange.examNo}, #{arrange.siteId})
+        </foreach>
+    </insert>
+
+    <select id="getExamSiteByNo" resultType="java.lang.String">
+        SELECT DISTINCT site_id
+        FROM invigilator_site_arrange
+        WHERE exam_no = #{examNo}
+        ORDER BY site_id ASC
+    </select>
+
+    <select id="getArrange" resultType="com.tinyplan.exam.entity.po.InvigilatorArrange">
+        SELECT <include refid="invigilatorArrangeColumn"/>
+        FROM invigilator_site_arrange
+        WHERE exam_no = #{examNo} AND site_id = #{siteId}
+    </select>
+
+</mapper>

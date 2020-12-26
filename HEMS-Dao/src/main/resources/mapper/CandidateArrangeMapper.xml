@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tinyplan.exam.dao.CandidateArrangeMapper">
+
+    <sql id="candidateArrangeColumn">
+        candidate_id AS candidateId, candidate_no AS candidateNo, exam_no AS examNo, site_id AS siteId, seat
+    </sql>
+
+    <sql id="rawCandidateArrangeColumn">
+        candidate_id, candidate_no, exam_no, site_id, seat
+    </sql>
+
+    <insert id="insertArranges">
+        INSERT INTO candidate_seat_arrange (<include refid="rawCandidateArrangeColumn"/>)
+        VALUES
+        <foreach collection="list" item="arrange" separator=", ">
+            (#{arrange.candidateId}, #{arrange.candidateNo}, #{arrange.examNo}, #{arrange.siteId}, #{arrange.seat})
+        </foreach>
+    </insert>
+
+    <update id="updateSiteAndSeat">
+        UPDATE candidate_seat_arrange
+        SET site_id = #{siteId}, seat = #{seat}
+        WHERE candidate_no = #{candidateNo}
+    </update>
+
+    <select id="queryArrangeByCandidateNoOrRealName" resultType="com.tinyplan.exam.entity.po.CandidateArrange">
+        SELECT <include refid="candidateArrangeColumn"/>
+        FROM candidate_seat_arrange
+        WHERE candidate_no = #{param} OR candidate_id IN (
+            SELECT candidate_id FROM candidate_detail WHERE real_name LIKE concat('%', #{param}, '%')
+        )
+    </select>
+
+    <select id="queryArrangeByExamNoAndSite" resultType="com.tinyplan.exam.entity.po.CandidateArrange">
+        SELECT <include refid="candidateArrangeColumn"/>
+        FROM candidate_seat_arrange
+        WHERE exam_no = #{examNo} AND site_id = #{siteId}
+    </select>
+
+    <select id="getArrangeByCandidateNo" resultType="com.tinyplan.exam.entity.po.CandidateArrange">
+        SELECT <include refid="candidateArrangeColumn"/>
+        FROM candidate_seat_arrange
+        WHERE candidate_no = #{candidateNo}
+    </select>
+
+    <select id="getSiteCount" resultType="java.lang.Integer">
+        SELECT count(id)
+        FROM candidate_seat_arrange
+        WHERE exam_no = #{examNo} AND site_id = #{siteId}
+    </select>
+</mapper>

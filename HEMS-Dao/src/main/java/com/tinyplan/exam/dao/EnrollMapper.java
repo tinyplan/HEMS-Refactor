@@ -48,4 +48,6 @@ public interface EnrollMapper {
                                              @Param("enrollId") String enrollId);
 
     Enroll getEnrollById(@Param("enrollId") String enrollId);
+
+    List<Enroll> getEnrollByExamNoAndStatus(@Param("examNo") String examNo, @Param("status") Integer status);
 }

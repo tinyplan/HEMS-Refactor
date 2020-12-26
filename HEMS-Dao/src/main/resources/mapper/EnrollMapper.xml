@@ -112,4 +112,10 @@
         FROM enroll
         WHERE candidate_id = #{candidateId} AND status IN (1, 2)
     </select>
+
+    <select id="getEnrollByExamNoAndStatus" resultType="com.tinyplan.exam.entity.po.Enroll">
+        SELECT <include refid="enrollColumn"/>
+        FROM enroll
+        WHERE exam_no = #{examNo} AND status = #{status}
+    </select>
 </mapper>

@@ -90,4 +90,10 @@
         WHERE candidate_id = #{userId}
     </select>
 
+    <select id="getCandidateDetailByIdCard" resultType="com.tinyplan.exam.entity.po.CandidateDetail">
+        SELECT <include refid="candidateDetailColumn"/>
+        FROM candidate_detail
+        WHERE id_card = #{idCard}
+    </select>
+
 </mapper>

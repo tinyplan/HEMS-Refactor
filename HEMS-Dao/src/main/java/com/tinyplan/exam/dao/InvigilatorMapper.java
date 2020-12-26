@@ -25,6 +25,8 @@ public interface InvigilatorMapper {
 
     Integer getInvigilatorCountExceptSelf(@Param("contact") String contact, @Param("selfId") String selfId);
 
+    Invigilator getInvigilator(@Param("invId") String invId);
+
     Integer updateInvigilatorStatus(@Param("invigilatorId") String invigilatorId, @Param("status") Integer status);
 
     Integer updateInvigilator(@Param("inv") Invigilator invigilator);

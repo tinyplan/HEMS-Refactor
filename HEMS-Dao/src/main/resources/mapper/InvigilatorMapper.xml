@@ -71,4 +71,10 @@
         WHERE contact = #{contact} AND status = 1 AND invigilator_id != #{selfId}
     </select>
 
+    <select id="getInvigilator" resultType="com.tinyplan.exam.entity.po.Invigilator">
+        SELECT <include refid="invigilatorColumn"/>
+        FROM invigilator
+        WHERE invigilator_id = #{invId}
+    </select>
+
 </mapper>

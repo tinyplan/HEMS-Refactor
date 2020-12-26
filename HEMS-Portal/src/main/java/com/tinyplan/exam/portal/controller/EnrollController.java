@@ -1,11 +1,13 @@
 package com.tinyplan.exam.portal.controller;
 
 import com.tinyplan.exam.common.annotation.Authorization;
+import com.tinyplan.exam.common.utils.JwtUtil;
 import com.tinyplan.exam.common.utils.RequestUtil;
 import com.tinyplan.exam.entity.form.EnrollApplyForm;
 import com.tinyplan.exam.entity.form.EnrollForm;
 import com.tinyplan.exam.entity.form.PayForm;
 import com.tinyplan.exam.entity.pojo.ApiResult;
+import com.tinyplan.exam.entity.pojo.JwtDataLoad;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
 import com.tinyplan.exam.entity.vo.Pagination;
 import com.tinyplan.exam.entity.vo.PortalEnrollVO;
@@ -81,11 +83,13 @@ public class EnrollController {
 
     @GetMapping("/type")
     @Authorization
-    public ApiResult<Pagination<PortalEnrollVO>> getEnroll(@RequestParam("pageSize") Integer pageSize,
+    public ApiResult<Pagination<PortalEnrollVO>> getEnroll(HttpServletRequest request,
+                                                           @RequestParam("pageSize") Integer pageSize,
                                                            @RequestParam("candidateId") String candidateId,
                                                            @RequestParam("code") Integer code){
+        JwtDataLoad load = JwtUtil.getDataLoad(request);
         return new ApiResult<>(ResultStatus.RES_SUCCESS,
-                enrollService.getEnrollForPortalWithPagination(pageSize, candidateId, code));
+                enrollService.getEnrollForPortalWithPagination(pageSize, load.getUserId(), code));
     }
 
     /**

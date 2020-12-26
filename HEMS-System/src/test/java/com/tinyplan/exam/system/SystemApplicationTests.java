@@ -11,6 +11,7 @@ import com.tinyplan.exam.dao.InvigilatorMapper;
 import com.tinyplan.exam.entity.dto.SiteInfoDTO;
 import com.tinyplan.exam.entity.po.Invigilator;
 import com.tinyplan.exam.entity.pojo.type.ExamStatus;
+import com.tinyplan.exam.service.ExamArrangeService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,6 +34,9 @@ class SystemApplicationTests {
     @Resource(name = "invigilatorMapper")
     private InvigilatorMapper invigilatorMapper;
 
+    @Resource(name = "examArrangeServiceImpl")
+    private ExamArrangeService examArrangeService;
+
     @Test
     void contextLoads() {
         System.out.println(DateUtil.offsetDay(new Date(), 1));
@@ -49,6 +53,11 @@ class SystemApplicationTests {
     @Test
     void testMapper() {
         // invigilatorMapper.getAllInvigilator().forEach(System.out::println);
+    }
+
+    @Test
+    void testService() {
+        examArrangeService.getArrangeInfo("can_20201220_3");
     }
 
 }

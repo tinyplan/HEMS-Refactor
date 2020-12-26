@@ -23,4 +23,8 @@ public interface SiteMapper {
 
      List<Site> querySite(@Param("building") String building, @Param("floor") String floor);
 
+     List<Site> querySiteByStatus(@Param("status") Integer status);
+
+     Site querySiteById(@Param("siteId") String siteId);
+
 }

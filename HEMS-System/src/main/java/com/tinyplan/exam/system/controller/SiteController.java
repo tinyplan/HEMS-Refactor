@@ -6,6 +6,7 @@ import com.tinyplan.exam.entity.po.Site;
 import com.tinyplan.exam.entity.pojo.ApiResult;
 import com.tinyplan.exam.entity.pojo.ResultStatus;
 import com.tinyplan.exam.entity.vo.SiteVO;
+import com.tinyplan.exam.service.ExamArrangeService;
 import com.tinyplan.exam.service.SiteService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,9 @@ public class SiteController {
 
     @Resource(name = "siteServiceImpl")
     private SiteService siteService;
+
+    @Resource(name = "examArrangeServiceImpl")
+    private ExamArrangeService examArrangeService;
 
     @PostMapping(value = "/excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Authorization
@@ -66,6 +70,12 @@ public class SiteController {
     public ApiResult<Object> updateSiteCapacity(@RequestBody SiteForm form) {
         siteService.updateCapacity(form.getClassroom(), form.getCapacity());
         return new ApiResult<>(ResultStatus.RES_SUCCESS, null);
+    }
+
+    @GetMapping("/examName")
+    @Authorization
+    public ApiResult<List<String>> getExamArrangeSite(@RequestParam("examName") String examName) {
+        return new ApiResult<>(ResultStatus.RES_SUCCESS, examArrangeService.getExamArrangeSite(examName));
     }
 
 }

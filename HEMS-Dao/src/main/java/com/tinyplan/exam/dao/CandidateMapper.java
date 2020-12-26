@@ -65,6 +65,8 @@ public interface CandidateMapper {
      */
     CandidateDetail getCandidateDetail(@Param("userId") String userId);
 
+    CandidateDetail getCandidateDetailByIdCard(@Param("idCard") String idCard);
+
     /**
      * 更新密码
      *

@@ -62,4 +62,17 @@
             AND status != -1
         </where>
     </select>
+
+    <select id="querySiteByStatus" resultType="com.tinyplan.exam.entity.po.Site">
+        SELECT <include refid="siteColumn"/>
+        FROM site
+        WHERE status = #{status}
+        ORDER BY room ASC
+    </select>
+
+    <select id="querySiteById" resultType="com.tinyplan.exam.entity.po.Site">
+        SELECT <include refid="siteColumn"/>
+        FROM site
+        WHERE site_id = #{siteId}
+    </select>
 </mapper>
